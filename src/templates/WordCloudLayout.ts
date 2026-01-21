@@ -110,6 +110,43 @@ function measureWord(
   }
 }
 
+/**
+ * Calculate max font size that fits word within available width
+ * Binary search for efficiency
+ */
+function getMaxSafeFontSize(
+  word: string,
+  tier: 'hero' | 'strong' | 'normal',
+  maxFontSize: number,
+  availableWidth: number,
+  minFontSize: number = 30
+): number {
+  // Quick check - if max size fits, use it
+  const maxMeasure = measureWord(word, maxFontSize, tier);
+  if (maxMeasure.width <= availableWidth) {
+    return maxFontSize;
+  }
+
+  // Binary search for largest fitting size
+  let low = minFontSize;
+  let high = maxFontSize;
+  let bestFit = minFontSize;
+
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    const measure = measureWord(word, mid, tier);
+
+    if (measure.width <= availableWidth) {
+      bestFit = mid;
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+
+  return bestFit;
+}
+
 function getWordImportance(word: string, index: number, total: number): number {
   let score = 40;
   const cleanWord = word.replace(/[.,!?;:'\"]/g, '').toLowerCase();
@@ -310,32 +347,41 @@ export function layoutWordCloud(
     index: i,
   }));
 
-  // Assign tiers based on mode
+  // Calculate available width for text (with margins)
+  const marginX = options.marginX ?? 0;
+  const availableWidth = frameWidth - marginX * 2;
+
+  // Assign tiers based on mode, clamping font size to fit screen
   let tiered: Array<{ word: string; fontSize: number; importance: number; tier: 'hero' | 'strong' | 'normal'; timestamp: number }>;
 
   if (mode === 'all-equal') {
-    // All words same size
-    tiered = scored.map(w => ({
-      word: w.word,
-      fontSize: FONT_SIZES.strong,
-      importance: w.importance,
-      tier: 'strong' as const,
-      timestamp: w.timestamp,
-    }));
-  } else if (mode === 'stacked') {
-    // Decreasing sizes top to bottom
-    tiered = scored.map((w, i) => {
-      const tier = i === 0 ? 'hero' : i < 3 ? 'strong' : 'normal';
+    // All words same size (clamped to fit)
+    tiered = scored.map(w => {
+      const tier = 'strong' as const;
+      const safeFontSize = getMaxSafeFontSize(w.word, tier, FONT_SIZES.strong, availableWidth);
       return {
         word: w.word,
-        fontSize: FONT_SIZES[tier],
+        fontSize: safeFontSize,
+        importance: w.importance,
+        tier,
+        timestamp: w.timestamp,
+      };
+    });
+  } else if (mode === 'stacked') {
+    // Decreasing sizes top to bottom (clamped to fit)
+    tiered = scored.map((w, i) => {
+      const tier = i === 0 ? 'hero' : i < 3 ? 'strong' : 'normal';
+      const safeFontSize = getMaxSafeFontSize(w.word, tier, FONT_SIZES[tier], availableWidth);
+      return {
+        word: w.word,
+        fontSize: safeFontSize,
         importance: w.importance,
         tier,
         timestamp: w.timestamp,
       };
     });
   } else {
-    // Hero-based: find most important
+    // Hero-based: find most important (clamped to fit)
     const maxImportance = Math.max(...scored.map(s => s.importance));
     tiered = scored.map(w => {
       let tier: 'hero' | 'strong' | 'normal';
@@ -346,9 +392,10 @@ export function layoutWordCloud(
       } else {
         tier = 'normal';
       }
+      const safeFontSize = getMaxSafeFontSize(w.word, tier, FONT_SIZES[tier], availableWidth);
       return {
         word: w.word,
-        fontSize: FONT_SIZES[tier],
+        fontSize: safeFontSize,
         importance: w.importance,
         tier,
         timestamp: w.timestamp,

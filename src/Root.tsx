@@ -18,6 +18,7 @@ import { FocusTemplateDemo } from "./compositions/FocusTemplateDemo";
 import { MultiWordDemo } from "./compositions/MultiWordDemo";
 import { YuvalManzura } from "./compositions/YuvalManzura";
 import { YuvalManzuraHebrew } from "./compositions/YuvalManzuraHebrew";
+import { DreemzPromo } from "./compositions/DreemzPromo";
 
 // Schema for FocusTemplateDemo (single word) with slider controls
 const focusTemplateDemoSchema = z.object({
@@ -372,6 +373,34 @@ export const RemotionRoot: React.FC = () => {
             glowIntensity: 1.2,
             dustEnabled: true,
             lightBeamsEnabled: true,
+          }}
+        />
+        <Composition
+          id="DreemzPromo"
+          component={DreemzPromo}
+          durationInFrames={1200}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            heroFontSize: 160,
+            strongFontSize: 100,
+            normalFontSize: 70,
+            marginX: 50,
+            marginY: 100,
+            gapThreshold: 0.5,
+            maxWordsPerGroup: 5,
+            glowIntensity: 1.5,
+            particleDensity: 1.2,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: -1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
           }}
         />
       </Folder>
