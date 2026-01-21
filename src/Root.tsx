@@ -1,4 +1,5 @@
 import { Composition, Folder } from "remotion";
+import { z } from "zod";
 import { HelloWorld } from "./compositions/HelloWorld";
 import { TextReveal } from "./compositions/TextReveal";
 import { SocialPost } from "./compositions/SocialPost";
@@ -14,6 +15,44 @@ import { KineticSpeechV2 } from "./compositions/KineticSpeechV2";
 import { FocusPower } from "./compositions/FocusPower";
 import { SequenceComposition } from "./templates/SequenceComposition";
 import { FocusTemplateDemo } from "./compositions/FocusTemplateDemo";
+import { MultiWordDemo } from "./compositions/MultiWordDemo";
+import { YuvalManzura } from "./compositions/YuvalManzura";
+import { YuvalManzuraHebrew } from "./compositions/YuvalManzuraHebrew";
+
+// Schema for FocusTemplateDemo (single word) with slider controls
+const focusTemplateDemoSchema = z.object({
+  baseFontSize: z.number().min(80).max(400).default(200),
+  dustEnabled: z.boolean().default(true),
+  lightBeamsEnabled: z.boolean().default(true),
+  centerGlowEnabled: z.boolean().default(true),
+  glowIntensity: z.number().min(0).max(3).step(0.1).default(1),
+  anticipationFrames: z.number().min(0).max(20).default(5),
+  colorSchemeStart: z.number().min(0).max(7).default(0),
+});
+
+// Schema for MultiWordDemo with slider controls
+const multiWordDemoSchema = z.object({
+  // === FONT SIZES ===
+  heroFontSize: z.number().min(50).max(400).default(140),
+  strongFontSize: z.number().min(30).max(250).default(90),
+  normalFontSize: z.number().min(20).max(150).default(60),
+  // === LAYOUT ===
+  marginX: z.number().min(0).max(300).default(0),
+  marginY: z.number().min(0).max(300).default(0),
+  gapThreshold: z.number().min(0.1).max(2).step(0.1).default(0.4),
+  maxWordsPerGroup: z.number().min(2).max(15).default(6),
+  // === VFX ===
+  glowIntensity: z.number().min(0).max(3).step(0.1).default(1),
+  particleDensity: z.number().min(0).max(3).step(0.1).default(1),
+  backgroundPulse: z.boolean().default(true),
+  wordEntranceStyle: z.enum(['pop', 'slide', 'fade', 'glitch']).default('pop'),
+  colorScheme: z.number().min(-1).max(7).default(-1),  // -1 = cycle
+  screenShake: z.number().min(0).max(20).step(1).default(0),
+  dustEnabled: z.boolean().default(true),
+  lightBeamsEnabled: z.boolean().default(true),
+  textStroke: z.number().min(0).max(5).step(0.5).default(0),
+  animationSpeed: z.number().min(0.2).max(3).step(0.1).default(1),
+});
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -252,7 +291,88 @@ export const RemotionRoot: React.FC = () => {
           fps={30}
           width={1080}
           height={1920}
-          defaultProps={{}}
+          schema={focusTemplateDemoSchema}
+          defaultProps={{
+            baseFontSize: 200,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            centerGlowEnabled: true,
+            glowIntensity: 1,
+            anticipationFrames: 5,
+            colorSchemeStart: 0,
+          }}
+        />
+        <Composition
+          id="MultiWordDemo"
+          component={MultiWordDemo}
+          durationInFrames={1560}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            // Font sizes
+            heroFontSize: 140,
+            strongFontSize: 90,
+            normalFontSize: 60,
+            // Layout
+            marginX: 0,
+            marginY: 0,
+            gapThreshold: 0.4,
+            maxWordsPerGroup: 6,
+            // VFX
+            glowIntensity: 1,
+            particleDensity: 1,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: -1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
+          }}
+        />
+        <Composition
+          id="YuvalManzura"
+          component={YuvalManzura}
+          durationInFrames={2144}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            heroFontSize: 140,
+            strongFontSize: 90,
+            normalFontSize: 60,
+            marginX: 40,
+            marginY: 80,
+            gapThreshold: 0.4,
+            maxWordsPerGroup: 6,
+            glowIntensity: 1.2,
+            particleDensity: 1,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: -1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
+          }}
+        />
+        <Composition
+          id="YuvalManzuraHebrew"
+          component={YuvalManzuraHebrew}
+          durationInFrames={1720}
+          fps={30}
+          width={1080}
+          height={1920}
+          defaultProps={{
+            glowIntensity: 1.2,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+          }}
         />
       </Folder>
     </>

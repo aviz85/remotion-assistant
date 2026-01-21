@@ -10,6 +10,9 @@ build/
 # Projects - contains generated media, large files
 projects/
 
+# Public project audio (generated, can be regenerated)
+public/*/
+
 # Remotion cache
 .remotion/
 
