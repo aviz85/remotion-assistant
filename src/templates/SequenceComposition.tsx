@@ -130,10 +130,11 @@ function groupWords(wordTimings: WordTiming[]): WordGroup[] {
         break;
     }
 
-    // Rotate through animations and colors
+    // Rotate through animations and colors (dark themes only)
+    const darkColorVariants = ['dark', 'purple', 'blue', 'warm', 'green'];
     const enterAnimation = enterVariants[(groupIndex * 2) % enterVariants.length];
     const exitAnimation = exitVariants[groupIndex % exitVariants.length];
-    const colorScheme = colorVariants[Math.floor(groupIndex / 3) % colorVariants.length];
+    const colorScheme = darkColorVariants[groupIndex % darkColorVariants.length];
 
     groups.push({
       words: groupWords.map(w => w.word),
@@ -165,8 +166,6 @@ interface AnimatedGroupProps {
 const AnimatedGroup: React.FC<AnimatedGroupProps> = ({ group, fps }) => {
   const frame = useCurrentFrame();
   const colors = COLOR_SCHEMES[group.colorScheme as keyof typeof COLOR_SCHEMES] || COLOR_SCHEMES.dark;
-  const enter = ENTER_ANIMATIONS[group.enterAnimation as keyof typeof ENTER_ANIMATIONS] || ENTER_ANIMATIONS.fadeUp;
-  const exit = EXIT_ANIMATIONS[group.exitAnimation as keyof typeof EXIT_ANIMATIONS] || EXIT_ANIMATIONS.fadeOut;
 
   // Get layout
   let layoutConfig;
@@ -182,46 +181,42 @@ const AnimatedGroup: React.FC<AnimatedGroupProps> = ({ group, fps }) => {
       break;
   }
 
-  const durationFrames = Math.round((group.endTime - group.startTime) * fps) + 15; // Add buffer
-  const exitStartFrame = durationFrames - exit.duration;
+  const durationFrames = Math.round((group.endTime - group.startTime) * fps);
+
+  // FAST entrance (5 frames), SLOW exit (use all remaining time for decay)
+  const enterDuration = 5; // Instant attack
+  const exitStartFrame = durationFrames; // Start exit right when words end
+  const exitDuration = 20; // Slow decay during silence
 
   return (
     <AbsoluteFill style={{ background: colors.background }}>
       <AbsoluteFill style={layoutConfig.container}>
         {group.words.map((word, i) => {
-          const staggerDelay = i * 4; // 4 frames between each word
+          const staggerDelay = i * 2; // Quick stagger (2 frames)
           const wordStartFrame = staggerDelay;
 
-          // Enter animation
-          const enterProgress = enter.ease === 'spring'
-            ? spring({
-                frame: frame - wordStartFrame,
-                fps,
-                config: { damping: 12, stiffness: 180 },
-              })
-            : interpolate(
-                frame,
-                [wordStartFrame, wordStartFrame + enter.duration],
-                [0, 1],
-                { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
-              );
+          // FAST entrance - spring with high stiffness for instant attack
+          const enterProgress = spring({
+            frame: frame - wordStartFrame,
+            fps,
+            config: { damping: 20, stiffness: 400, mass: 0.5 }, // Snappy!
+          });
 
-          // Exit animation
+          // SLOW exit - gentle fade during silence
           const exitProgress = interpolate(
             frame,
-            [exitStartFrame, exitStartFrame + exit.duration],
+            [exitStartFrame, exitStartFrame + exitDuration],
             [0, 1],
             { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
           );
 
-          // Calculate styles
-          const opacity = Math.min(enterProgress, 1 - exitProgress);
+          // Opacity: instant in, slow out
+          const opacity = Math.min(enterProgress, 1 - (exitProgress * 0.8)); // Don't fully fade
 
-          // Transform interpolation
-          const translateY = interpolate(enterProgress, [0, 1], [50, 0]);
-          const scale = interpolate(enterProgress, [0, 1], [0.8, 1]);
-          const exitTranslateY = interpolate(exitProgress, [0, 1], [0, -30]);
-          const exitScale = interpolate(exitProgress, [0, 1], [1, 0.95]);
+          // Transform: quick scale up, slow gentle drift up on exit
+          const scale = interpolate(enterProgress, [0, 1], [0.7, 1]);
+          const exitTranslateY = interpolate(exitProgress, [0, 1], [0, -20]);
+          const exitScale = interpolate(exitProgress, [0, 1], [1, 0.98]);
 
           const wordStyle = layoutConfig.wordStyles[i] || layoutConfig.wordStyles[0];
 
@@ -232,8 +227,8 @@ const AnimatedGroup: React.FC<AnimatedGroupProps> = ({ group, fps }) => {
                 color: colors.text,
                 fontFamily: 'Inter, system-ui, sans-serif',
                 opacity: Math.max(0, opacity),
-                transform: `translateY(${translateY + exitTranslateY}px) scale(${scale * exitScale})`,
-                textShadow: `0 0 60px ${colors.accent}40`,
+                transform: `translateY(${exitTranslateY}px) scale(${scale * exitScale})`,
+                textShadow: `0 0 80px ${colors.accent}60`,
                 ...wordStyle,
               }}
             >

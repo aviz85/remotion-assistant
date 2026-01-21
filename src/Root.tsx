@@ -12,6 +12,8 @@ import { ParticleText } from "./compositions/ParticleText";
 import { KineticSpeech } from "./compositions/KineticSpeech";
 import { KineticSpeechV2 } from "./compositions/KineticSpeechV2";
 import { FocusPower } from "./compositions/FocusPower";
+import { SequenceComposition } from "./templates/SequenceComposition";
+import { FocusTemplateDemo } from "./compositions/FocusTemplateDemo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -237,6 +239,15 @@ export const RemotionRoot: React.FC = () => {
         <Composition
           id="FocusPower"
           component={FocusPower}
+          durationInFrames={1560}
+          fps={30}
+          width={1080}
+          height={1920}
+          defaultProps={{}}
+        />
+        <Composition
+          id="FocusTemplateDemo"
+          component={FocusTemplateDemo}
           durationInFrames={1560}
           fps={30}
           width={1080}
