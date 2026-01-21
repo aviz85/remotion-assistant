@@ -1,0 +1,25 @@
+{
+  "name": "remotion-assistant",
+  "version": "1.0.0",
+  "description": "Remotion video generation assistant",
+  "scripts": {
+    "dev": "npx remotion studio",
+    "build": "npx remotion render",
+    "render": "npx remotion render",
+    "preview": "npx remotion preview",
+    "upgrade": "npx remotion upgrade"
+  },
+  "keywords": ["remotion", "video", "react", "animation"],
+  "author": "Aviz",
+  "license": "ISC",
+  "dependencies": {
+    "@remotion/bundler": "^4.0.407",
+    "@remotion/cli": "^4.0.407",
+    "@remotion/player": "^4.0.407",
+    "@types/react": "^19.2.9",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "remotion": "^4.0.407",
+    "typescript": "^5.9.3"
+  }
+}
