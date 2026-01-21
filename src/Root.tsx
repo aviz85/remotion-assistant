@@ -336,7 +336,7 @@ export const RemotionRoot: React.FC = () => {
         <Composition
           id="YuvalManzura"
           component={YuvalManzura}
-          durationInFrames={2144}
+          durationInFrames={2030}
           fps={30}
           width={1080}
           height={1920}
@@ -364,7 +364,7 @@ export const RemotionRoot: React.FC = () => {
         <Composition
           id="YuvalManzuraHebrew"
           component={YuvalManzuraHebrew}
-          durationInFrames={1720}
+          durationInFrames={1815}
           fps={30}
           width={1080}
           height={1920}

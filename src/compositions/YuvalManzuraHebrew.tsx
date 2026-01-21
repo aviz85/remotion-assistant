@@ -243,8 +243,8 @@ export const YuvalManzuraHebrew: React.FC<{
       <AbsoluteFill
         style={{
           display: 'flex',
-          flexDirection: 'row-reverse',
-          flexWrap: 'wrap',
+          flexDirection: 'row',
+          flexWrap: 'wrap-reverse',
           justifyContent: 'center',
           alignContent: 'center',
           alignItems: 'center',
@@ -252,18 +252,20 @@ export const YuvalManzuraHebrew: React.FC<{
           direction: 'rtl',
         }}
       >
-        {activeWords.map((w, i) => {
+        {/* Reverse array so newest word appears on the left (correct for RTL reading) */}
+        {[...activeWords].reverse().map((w, i) => {
           const wordAge = currentTime - w.start;
           const opacity = interpolate(wordAge, [0, 0.1], [0, 1], { extrapolateRight: 'clamp' });
           const scale = interpolate(wordAge, [0, 0.05, 0.15], [0.5, 1.1, 1], { extrapolateRight: 'clamp' });
+          const originalIndex = activeWords.length - 1 - i;
 
           return (
             <WordDisplay
-              key={`${currentScreenIndex}-${i}`}
+              key={`${currentScreenIndex}-${originalIndex}`}
               word={w.word}
-              fontSize={getWordSize(w.word, i)}
+              fontSize={getWordSize(w.word, originalIndex)}
               color={colorScheme.text}
-              glowColor={i === 0 ? colorScheme.hero : colorScheme.accent}
+              glowColor={originalIndex === 0 ? colorScheme.hero : colorScheme.accent}
               opacity={opacity}
               scale={scale}
             />
