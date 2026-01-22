@@ -895,30 +895,55 @@ Word count guide:
 - 60 sec = 120-150 words
 - 90 sec = 180-220 words
 
-## Pipeline Commands
+## Using Skills (The Right Way!)
 
-### Generate Speech
-```bash
-cd ~/.claude/skills/speech-generator/scripts
-npx ts-node generate_speech.ts -f script.txt -o speech.mp3
+**IMPORTANT:** Don't run scripts directly! Use the skills through Claude Code.
+
+### How to Use Skills
+
+Simply ask Claude Code to use the skill, or invoke it with /skill-name:
+
+```
+"Generate speech from script.txt and save to speech.mp3"
+→ Claude will use /speech-generator skill
+
+"Transcribe speech.mp3 with word-level timing"
+→ Claude will use /transcribe skill
+
+"Generate 90 seconds of inspirational cinematic music"
+→ Claude will use /music-generator skill
+
+"Upload video.mp4 to YouTube with title 'My Video'"
+→ Claude will use /youtube-uploader skill
+
+"Render the MyComposition composition"
+→ Claude will use /remotion-render skill
 ```
 
-### Transcribe with Timing
+### If Skill Not Found
+
+If Claude says a skill is not installed, install it:
+
 ```bash
-cd ~/.claude/skills/transcribe/scripts
-npx ts-node transcribe.ts -i speech.mp3 -o transcript.json --json
+# Install from Aviz Skills Library
+npx @anthropic-ai/claude-code skill add aviz85/claude-skills-library/skills/[skill-name]
+
+# Then restart Claude Code (exit and re-enter project)
 ```
 
-### Generate Music
-```bash
-cd ~/.claude/skills/music-generator/scripts
-npx ts-node generate_music.ts \
-  --prompt "Inspirational, cinematic, building" \
-  --duration 90 \
-  --output music.mp3
-```
+### Available Skills for Kinetic Videos
 
-### Mix Audio (FFmpeg)
+| Skill | Command | Purpose |
+|-------|---------|---------|
+| speech-generator | /speech-generator | Generate speech with ElevenLabs TTS |
+| music-generator | /music-generator | Generate background music |
+| transcribe | /transcribe | Get word-level timing from audio |
+| youtube-uploader | /youtube-uploader | Upload to YouTube |
+| remotion-render | /remotion-render | Render Remotion compositions |
+
+### Audio Mixing (FFmpeg - manual step)
+
+After generating speech and music, mix them:
 ```bash
 ffmpeg -y \
   -i speech.mp3 \
@@ -926,22 +951,6 @@ ffmpeg -y \
   -filter_complex "[0:a]volume=1.0[speech];[1:a]volume=0.17[music];[speech][music]amix=inputs=2:duration=first[out]" \
   -map "[out]" -c:a libmp3lame -q:a 2 \
   final_audio.mp3
-```
-
-### Render Video
-```bash
-npx remotion render src/Root.tsx MyComposition output.mp4
-```
-
-### Upload to YouTube (optional)
-```bash
-cd ~/.claude/skills/youtube-uploader/scripts
-npx ts-node youtube-upload.ts \
-  --video output.mp4 \
-  --title "Your Title" \
-  --description "Description" \
-  --tags "tag1,tag2" \
-  --privacy unlisted
 ```
 
 ## Remotion Composition Template
