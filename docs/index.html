@@ -839,9 +839,22 @@ npm install remotion @remotion/cli @remotion/player
 npx @anthropic-ai/claude-code skill add remotion-dev/skills/remotion-best-practices
 ```
 
+### 3. Install Aviz Skills Library
+Clone the skills library that includes speech, music, transcription and YouTube upload:
+```bash
+# Clone the skills library
+git clone https://github.com/aviz85/claude-skills-library.git ~/.claude/skills-library
+
+# Install required skills (run each command)
+npx @anthropic-ai/claude-code skill add aviz85/claude-skills-library/skills/speech-generator
+npx @anthropic-ai/claude-code skill add aviz85/claude-skills-library/skills/music-generator
+npx @anthropic-ai/claude-code skill add aviz85/claude-skills-library/skills/transcribe
+npx @anthropic-ai/claude-code skill add aviz85/claude-skills-library/skills/youtube-uploader
+```
+
 **IMPORTANT:** After installing skills, restart Claude Code (exit and re-enter the project) to load the new skills!
 
-### 3. ElevenLabs API Setup
+### 4. ElevenLabs API Setup
 Create `.env` file:
 ```
 ELEVENLABS_API_KEY=your_api_key_here
@@ -852,7 +865,7 @@ Required for:
 - Music generation (specify exact duration)
 - Scribe v2 transcription (word-level timing)
 
-### 4. FFmpeg (for audio mixing)
+### 5. FFmpeg (for audio mixing)
 ```bash
 # macOS
 brew install ffmpeg
@@ -1027,8 +1040,9 @@ Resources:
             <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a>
         </p>
         <p style="margin-top: 0.5rem; font-size: 0.9rem;">
-            by <a href="https://github.com/aviz" target="_blank">Aviz</a> |
-            <a href="https://github.com/aviz/remotion-assistant" target="_blank">View Source</a>
+            by <a href="https://linktr.ee/aviz85" target="_blank">Aviz</a> |
+            <a href="https://github.com/aviz85/remotion-assistant" target="_blank">View Source</a> |
+            <a href="https://github.com/aviz85/claude-skills-library" target="_blank">Skills Library</a>
         </p>
     </footer>
 
