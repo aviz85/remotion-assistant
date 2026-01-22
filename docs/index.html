@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinetic Video Creator | AI-Powered Video Generation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Heebo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --hero: #a855f7;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --gradient-2: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Heebo', 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .english {
+            font-family: 'Inter', sans-serif;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 100px;
+            font-size: 0.9rem;
+            color: var(--accent-light);
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        /* Video Section */
+        .video-section {
+            padding: 4rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(99, 102, 241, 0.3);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Pipeline Section */
+        .pipeline {
+            padding: 6rem 2rem;
+            background: var(--bg-secondary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .pipeline-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .step-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .step p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .step-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(99, 102, 241, 0.15);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--accent-light);
+            margin-top: 1rem;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            padding: 6rem 2rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tech-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .tech-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .tech-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .tech-icon.remotion { background: linear-gradient(135deg, #0052ff, #00d4ff); }
+        .tech-icon.elevenlabs { background: linear-gradient(135deg, #000000, #333333); }
+        .tech-icon.react { background: linear-gradient(135deg, #61dafb, #21a0c8); }
+        .tech-icon.ffmpeg { background: linear-gradient(135deg, #007808, #5cb85c); }
+        .tech-icon.youtube { background: linear-gradient(135deg, #ff0000, #cc0000); }
+        .tech-icon.claude { background: linear-gradient(135deg, #d97706, #f59e0b); }
+
+        .tech-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .tech-info p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Prompt Section */
+        .prompt-section {
+            padding: 6rem 2rem;
+            background: var(--bg-secondary);
+        }
+
+        .prompt-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .prompt-header {
+            padding: 1.5rem 2rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prompt-header h3 {
+            font-size: 1.2rem;
+        }
+
+        .copy-btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-light);
+        }
+
+        .prompt-content {
+            padding: 2rem;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: var(--text-secondary);
+            max-height: 500px;
+            overflow-y: auto;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .prompt-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .prompt-content::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        .prompt-content::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        /* Dependencies */
+        .dependencies {
+            padding: 6rem 2rem;
+        }
+
+        .dep-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .dep-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dep-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .dep-card ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .dep-card li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dep-card li::before {
+            content: '✓';
+            color: var(--success);
+        }
+
+        .api-note {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            font-size: 0.9rem;
+            color: var(--warning);
+        }
+
+        /* Skills Section */
+        .skills-section {
+            padding: 6rem 2rem;
+            background: var(--bg-secondary);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            border-color: var(--hero);
+            transform: translateY(-3px);
+        }
+
+        .skill-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--hero);
+        }
+
+        .skill-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .skill-cmd {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--accent-light);
+            direction: ltr;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        footer p {
+            color: var(--text-secondary);
+        }
+
+        footer a {
+            color: var(--accent-light);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+
+            .prompt-content {
+                font-size: 0.8rem;
+                padding: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge english">🎬 AI-Powered Video Creation</span>
+            <h1>Kinetic Video Creator</h1>
+            <p>סקיל שיוצר סרטוני טקסט קינטיים מקצה לקצה - מרעיון ועד יוטיוב. דיבור, מוזיקה, אנימציה והעלאה - הכל אוטומטי.</p>
+            <div class="cta-buttons">
+                <a href="#prompt" class="btn btn-primary">קבל את הפרומפט</a>
+                <a href="#video" class="btn btn-secondary">צפה בדוגמה</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section id="video" class="video-section">
+        <div class="video-container">
+            <iframe
+                src="https://www.youtube.com/embed/PNBV4FNMreE"
+                title="Kinetic Video Example"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </section>
+
+    <!-- Pipeline Section -->
+    <section class="pipeline">
+        <div class="container">
+            <div class="section-title">
+                <h2>איך זה עובד?</h2>
+                <p class="english">8-Step Automated Pipeline</p>
+            </div>
+            <div class="pipeline-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">📝</div>
+                    <h3>כתיבת תסריט</h3>
+                    <p>Claude כותב דיבור דרמטי עם הנחיות רגשיות בסוגריים מרובעים לכיוון הקול</p>
+                    <span class="step-tag english">Script Writing</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">🎤</div>
+                    <h3>יצירת דיבור</h3>
+                    <p>ElevenLabs מייצר קול מועתק עם אינטונציה ורגש - בעברית או אנגלית</p>
+                    <span class="step-tag english">TTS Generation</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">📊</div>
+                    <h3>תמלול מדויק</h3>
+                    <p>חילוץ תזמון של כל מילה לסנכרון מושלם עם האנימציה</p>
+                    <span class="step-tag english">Word-Level Timing</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">🎵</div>
+                    <h3>יצירת מוזיקה</h3>
+                    <p>מוזיקה מותאמת לאורך המדויק עם עקומה רגשית תואמת</p>
+                    <span class="step-tag english">Music Generation</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-icon">🔊</div>
+                    <h3>מיקס אודיו</h3>
+                    <p>שילוב דיבור ומוזיקה ברמות ווליום מאוזנות</p>
+                    <span class="step-tag english">Audio Mixing</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">6</div>
+                    <div class="step-icon">✨</div>
+                    <h3>אנימציית Remotion</h3>
+                    <p>יצירת טיפוגרפיה קינטית עם אפקטים, זוהר וחלקיקים</p>
+                    <span class="step-tag english">Kinetic Typography</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">7</div>
+                    <div class="step-icon">🎬</div>
+                    <h3>רנדור וידאו</h3>
+                    <p>המרה לקובץ MP4 באיכות גבוהה בפורמט 9:16 לרשתות</p>
+                    <span class="step-tag english">Video Rendering</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">8</div>
+                    <div class="step-icon">📺</div>
+                    <h3>העלאה ליוטיוב</h3>
+                    <p>פרסום אוטומטי עם כותרת, תיאור ותגיות</p>
+                    <span class="step-tag english">YouTube Upload</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="tech-stack">
+        <div class="container">
+            <div class="section-title">
+                <h2>סטאק טכנולוגי</h2>
+                <p class="english">Open Source & API-Based</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon remotion">R</div>
+                    <div class="tech-info">
+                        <h4>Remotion</h4>
+                        <p class="english">React-based video framework</p>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon elevenlabs">11</div>
+                    <div class="tech-info">
+                        <h4>ElevenLabs</h4>
+                        <p class="english">TTS, Music & Transcription</p>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon react">⚛</div>
+                    <div class="tech-info">
+                        <h4>React + TypeScript</h4>
+                        <p class="english">Component-based composition</p>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon ffmpeg">▶</div>
+                    <div class="tech-info">
+                        <h4>FFmpeg</h4>
+                        <p class="english">Audio mixing & processing</p>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon youtube">▶</div>
+                    <div class="tech-info">
+                        <h4>YouTube API</h4>
+                        <p class="english">Automated publishing</p>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon claude">C</div>
+                    <div class="tech-info">
+                        <h4>Claude Code</h4>
+                        <p class="english">AI orchestration & skills</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dependencies -->
+    <section class="dependencies">
+        <div class="container">
+            <div class="section-title">
+                <h2>תלויות נדרשות</h2>
+                <p class="english">What You Need to Get Started</p>
+            </div>
+            <div class="dep-cards">
+                <div class="dep-card">
+                    <h3>🔑 ElevenLabs API</h3>
+                    <p>נדרש עבור 3 יכולות מרכזיות:</p>
+                    <ul>
+                        <li>Text-to-Speech (יצירת דיבור)</li>
+                        <li>Music Generation (יצירת מוזיקה)</li>
+                        <li>Scribe v2 (תמלול עם תזמון)</li>
+                    </ul>
+                    <div class="api-note">
+                        ⚠️ הגדר ELEVENLABS_API_KEY בקובץ .env
+                    </div>
+                </div>
+                <div class="dep-card">
+                    <h3>📦 Remotion Skills</h3>
+                    <p>התקנת ספריית הסקילים הרשמית:</p>
+                    <ul>
+                        <li>remotion-best-practices</li>
+                        <li>text-video animations</li>
+                        <li>social-video formats</li>
+                    </ul>
+                    <div class="skill-cmd">npx @anthropic-ai/claude-code skill add remotion-dev/skills/remotion-best-practices</div>
+                </div>
+                <div class="dep-card">
+                    <h3>🎬 YouTube API</h3>
+                    <p>אופציונלי - להעלאה אוטומטית:</p>
+                    <ul>
+                        <li>OAuth2 credentials</li>
+                        <li>youtube-uploader skill</li>
+                        <li>Privacy & metadata control</li>
+                    </ul>
+                    <div class="api-note">
+                        📝 ללא YouTube API - הסרטון נשמר מקומית
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>סקילים בשימוש</h2>
+                <p class="english">Claude Code Skills That Power This</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h4>kinetic-video-creator</h4>
+                    <p>הסקיל המרכזי שמנהל את כל התהליך מקצה לקצה</p>
+                    <div class="skill-cmd">/kinetic-video-creator</div>
+                </div>
+                <div class="skill-card">
+                    <h4>speech-generator</h4>
+                    <p>יצירת דיבור עם קול מועתק ורגש</p>
+                    <div class="skill-cmd">/speech-generator</div>
+                </div>
+                <div class="skill-card">
+                    <h4>music-generator</h4>
+                    <p>יצירת מוזיקת רקע באורך מותאם</p>
+                    <div class="skill-cmd">/music-generator</div>
+                </div>
+                <div class="skill-card">
+                    <h4>transcribe</h4>
+                    <p>תמלול עם תזמון ברמת מילה</p>
+                    <div class="skill-cmd">/transcribe</div>
+                </div>
+                <div class="skill-card">
+                    <h4>remotion-render</h4>
+                    <p>פקודות רנדור לווידאו</p>
+                    <div class="skill-cmd">/remotion-render</div>
+                </div>
+                <div class="skill-card">
+                    <h4>youtube-uploader</h4>
+                    <p>העלאה אוטומטית ליוטיוב</p>
+                    <div class="skill-cmd">/youtube-uploader</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prompt Section -->
+    <section id="prompt" class="prompt-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Claude Code Prompt</h2>
+                <p>העתק את הפרומפט הזה ל-Claude Code כדי לבנות מערכת דומה</p>
+            </div>
+            <div class="prompt-card">
+                <div class="prompt-header">
+                    <h3 class="english">Setup Prompt for Claude Code</h3>
+                    <button class="copy-btn" onclick="copyPrompt()">📋 העתק</button>
+                </div>
+                <pre class="prompt-content" id="prompt-text">
+# Kinetic Video Creator Setup
+
+Build me an automated kinetic typography video creation system using Claude Code skills.
+
+## Overview
+I want to create professional kinetic typography videos where:
+1. I provide an idea/topic
+2. Claude writes an emotionally-crafted script with bracket directions
+3. Speech is generated with ElevenLabs TTS
+4. Music is generated to match the duration and emotional arc
+5. Audio is transcribed for word-level timing
+6. Remotion creates animated text synced to speech
+7. Final video is rendered and optionally uploaded to YouTube
+
+## Required Dependencies
+
+### 1. Install Remotion
+```bash
+npm create video@latest
+# or in existing project:
+npm install remotion @remotion/cli @remotion/player
+```
+
+### 2. Install Remotion Skills
+```bash
+npx @anthropic-ai/claude-code skill add remotion-dev/skills/remotion-best-practices
+```
+
+### 3. ElevenLabs API Setup
+Create `.env` file:
+```
+ELEVENLABS_API_KEY=your_api_key_here
+```
+
+Required for:
+- Text-to-Speech generation
+- Music generation (specify exact duration)
+- Scribe v2 transcription (word-level timing)
+
+### 4. FFmpeg (for audio mixing)
+```bash
+# macOS
+brew install ffmpeg
+
+# Ubuntu/Debian
+sudo apt install ffmpeg
+```
+
+## Script Writing Guidelines
+
+Write scripts with emotional bracket directions:
+```
+[dramatic pause] The future isn't coming.
+[slowly, with weight] It's already here.
+[building intensity] Every day, every decision...
+[powerful, emphatic] ...shapes the world we'll live in.
+[warm, inspiring] And you? You're part of it.
+```
+
+Supported directions:
+- Pacing: [pause], [long pause], [slowly], [faster]
+- Tone: [whisper], [emphatic], [warm], [dramatic]
+- Dynamic: [building], [descending], [with weight]
+
+Word count guide:
+- 30 sec = 60-80 words
+- 60 sec = 120-150 words
+- 90 sec = 180-220 words
+
+## Pipeline Commands
+
+### Generate Speech
+```bash
+cd ~/.claude/skills/speech-generator/scripts
+npx ts-node generate_speech.ts -f script.txt -o speech.mp3
+```
+
+### Transcribe with Timing
+```bash
+cd ~/.claude/skills/transcribe/scripts
+npx ts-node transcribe.ts -i speech.mp3 -o transcript.json --json
+```
+
+### Generate Music
+```bash
+cd ~/.claude/skills/music-generator/scripts
+npx ts-node generate_music.ts \
+  --prompt "Inspirational, cinematic, building" \
+  --duration 90 \
+  --output music.mp3
+```
+
+### Mix Audio (FFmpeg)
+```bash
+ffmpeg -y \
+  -i speech.mp3 \
+  -i music.mp3 \
+  -filter_complex "[0:a]volume=1.0[speech];[1:a]volume=0.17[music];[speech][music]amix=inputs=2:duration=first[out]" \
+  -map "[out]" -c:a libmp3lame -q:a 2 \
+  final_audio.mp3
+```
+
+### Render Video
+```bash
+npx remotion render src/Root.tsx MyComposition output.mp4
+```
+
+### Upload to YouTube (optional)
+```bash
+cd ~/.claude/skills/youtube-uploader/scripts
+npx ts-node youtube-upload.ts \
+  --video output.mp4 \
+  --title "Your Title" \
+  --description "Description" \
+  --tags "tag1,tag2" \
+  --privacy unlisted
+```
+
+## Remotion Composition Template
+
+```tsx
+import { MultiWordComposition } from '../templates/MultiWordComposition';
+import transcriptData from '../projects/my-video/transcript.json';
+
+export const MyKineticVideo: React.FC = () => {
+  const WORD_TIMINGS = transcriptData.words.map(w => ({
+    word: w.word,
+    start: w.start,
+    end: w.end,
+  }));
+
+  return (
+    <MultiWordComposition
+      wordTimings={WORD_TIMINGS}
+      audioFile="my-video/final_audio.mp3"
+      heroFontSize={140}
+      strongFontSize={90}
+      normalFontSize={60}
+      glowIntensity={1.2}
+      dustEnabled={true}
+      lightBeamsEnabled={true}
+    />
+  );
+};
+```
+
+## Animation Modes
+
+### Word Cloud (default)
+Multiple words appear together, grouped by timing gaps.
+Best for: Fast-paced, dynamic content.
+
+### Single Word
+One word at a time, centered.
+Best for: Dramatic, impactful statements.
+
+## Visual Customization
+
+Available props:
+- heroFontSize: Size for emphasis words
+- strongFontSize: Size for important words
+- normalFontSize: Size for regular words
+- glowIntensity: 0-3 (glow around text)
+- dustEnabled: Particle effects
+- lightBeamsEnabled: Light beam animations
+- colorScheme: 0-7 (predefined color palettes)
+
+## Create the Skill
+
+After building the system, create a skill so Claude Code can automate this:
+
+```bash
+# Ask Claude Code
+"Create a skill called 'kinetic-video-creator' that automates the full pipeline.
+It should:
+1. Take a topic/idea as input
+2. Write an emotional script
+3. Generate speech with ElevenLabs
+4. Transcribe for timing
+5. Generate matching music
+6. Create Remotion composition
+7. Render the video
+8. Optionally upload to YouTube
+
+Use the claude-code-guide to learn how to create skills properly."
+```
+
+## Example Usage
+
+Once set up, simply tell Claude Code:
+
+"Create a kinetic video about the importance of persistence in achieving goals"
+
+And the entire pipeline runs automatically!
+
+---
+
+Resources:
+- Remotion: https://www.remotion.dev/
+- Remotion Skills: https://skills.sh/remotion-dev/skills/remotion-best-practices
+- ElevenLabs: https://elevenlabs.io/
+                </pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            Built with ❤️ using <a href="https://www.remotion.dev/" target="_blank">Remotion</a>,
+            <a href="https://elevenlabs.io/" target="_blank">ElevenLabs</a>, and
+            <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a>
+        </p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+            by <a href="https://github.com/aviz" target="_blank">Aviz</a> |
+            <a href="https://github.com/aviz/remotion-assistant" target="_blank">View Source</a>
+        </p>
+    </footer>
+
+    <script>
+        function copyPrompt() {
+            const promptText = document.getElementById('prompt-text').innerText;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✓ הועתק!';
+                setTimeout(() => {
+                    btn.textContent = '📋 העתק';
+                }, 2000);
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.step, .tech-card, .dep-card, .skill-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
