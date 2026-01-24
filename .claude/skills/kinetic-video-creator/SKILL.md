@@ -1,7 +1,7 @@
 ---
 name: kinetic-video-creator
 description: "Create professional kinetic typography videos from scratch. Includes speech writing, TTS with emotional dynamics, music generation, and animated text. Use for: promo videos, explainers, social content, inspirational speeches, product launches."
-argument-hint: [topic] [tone: inspirational/dramatic/energetic/calm]
+argument-hint: [topic] [tone: inspirational/dramatic/energetic/calm] [mode: cloud/single]
 ---
 
 # Kinetic Video Creator
@@ -11,13 +11,50 @@ Create stunning kinetic typography videos with AI-generated speech, music, and d
 ## Workflow Overview
 
 1. **Script** → Craft emotionally compelling speech text
-2. **Storyboard** → Plan animation beats and visual style
+2. **Director's Script** → Plan word groups + emphasis (Claude's intelligent layer)
 3. **Speech** → Generate TTS with emotional dynamics
 4. **Transcribe** → Get word-level timing data
-5. **Animate** → Create kinetic typography in Remotion
-6. **Music** → Generate background music matching emotional arc
-7. **Render** → Produce final video with merged audio
-8. **Publish** → Upload to YouTube (optional)
+5. **Merge** → Combine transcript + director annotations
+6. **Asset Research** → Search, download, curate reference images
+7. **B-Roll Generation** → Create images using references
+8. **Animate** → Create kinetic typography in Remotion
+9. **Music** → Generate background music matching emotional arc
+10. **Render** → Produce final video with merged audio
+11. **Publish** → Upload to YouTube (optional)
+
+---
+
+## Display Modes
+
+Two animation styles available. Default is **word cloud** unless user specifies otherwise.
+
+| Mode | Template | Description |
+|------|----------|-------------|
+| `cloud` (default) | `MultiWordComposition` | Groups words on screen together, shelf-packed layout. Dynamic, modern feel. |
+| `single` | `SequenceComposition` | One word at a time with varied animations. Classic kinetic typography. |
+
+### When to Use Each
+
+**Word Cloud (`cloud`)** - default
+- Multiple words visible simultaneously
+- Better for fast-paced, energetic content
+- Creates visual density and impact
+- Layout modes cycle: hero-center, stacked, scattered, etc.
+
+**Single Word (`single`)**
+- One word fills the screen at a time
+- Better for dramatic pauses, emphasis
+- Animations cycle: scaleUp, slideUp, rotateIn, fadeBlur, bounceIn, etc.
+- More traditional kinetic typography style
+
+### Specifying Mode
+
+User can request mode in the prompt:
+- "create a kinetic video about focus, single word style"
+- "kinetic video about AI, use word cloud"
+- "dramatic promo video, one word at a time"
+
+If not specified, use **word cloud** mode.
 
 ---
 
@@ -77,86 +114,76 @@ Use these in the speech text for TTS dynamics:
 
 ---
 
-## Step 2: Plan the Animation (Storyboard)
+## Step 2: Director's Script (Intelligent Planning)
 
-**IMPORTANT:** Plan before implementing. Create a storyboard JSON that maps:
-- Time segments to visual styles
-- Key words to emphasis treatments
-- Transition points and screen layouts
+**CRITICAL:** This is Claude's planning layer. Instead of relying on auto-detection algorithms, Claude plans word grouping and emphasis before animation.
 
-### Storyboard Format
+### Purpose
 
-Create `storyboard.json`:
+- **Word Grouping**: Decide which words appear together on screen (1-7 words per group)
+- **Emphasis Markers**: Mark hero/strong words for visual hierarchy
+- **Visual Asset Planning**: Note where images/b-roll should appear
+
+### Director's Script Format
+
+Create `director-script.json`:
 
 ```json
 {
+  "version": "1.0",
   "title": "Video Title",
-  "duration_seconds": 120,
-  "segments": [
+  "groups": [
     {
-      "name": "Hook",
-      "time_range": [0, 10],
-      "style": "minimal-dramatic",
-      "background": "dark-gradient",
-      "word_treatment": "fade-in-center",
-      "emphasis_words": ["Listen", "changes"],
-      "transition_out": "fade-to-black"
+      "id": 1,
+      "words": ["STOP"],
+      "emphasis": { "STOP": "hero" },
+      "style": "dramatic"
     },
     {
-      "name": "Build",
-      "time_range": [10, 50],
-      "style": "dynamic-stack",
-      "background": "animated-particles",
-      "word_treatment": "slide-from-sides",
-      "emphasis_words": ["intelligence", "Real"],
-      "transition_out": "zoom-blur"
+      "id": 2,
+      "words": ["scrolling", "through", "life"],
+      "emphasis": {}
     },
     {
-      "name": "Peak",
-      "time_range": [50, 80],
-      "style": "explosive-center",
-      "background": "radial-glow",
-      "word_treatment": "scale-bounce",
-      "emphasis_words": ["suddenly", "future"],
-      "transition_out": "flash-white"
-    },
+      "id": 3,
+      "words": ["There's", "a", "MOMENT", "when", "everything", "changes"],
+      "emphasis": { "MOMENT": "hero", "changes": "strong" }
+    }
+  ],
+  "visual_assets": [
     {
-      "name": "Resolve",
-      "time_range": [80, 120],
-      "style": "calm-elegant",
-      "background": "soft-gradient",
-      "word_treatment": "gentle-fade",
-      "emphasis_words": ["collaborating", "future"],
-      "transition_out": "slow-fade"
+      "after_group": 3,
+      "duration_seconds": 2,
+      "description": "tech workspace with laptop",
+      "purpose": "b-roll"
     }
   ]
 }
 ```
 
-### Visual Style Library
+### Emphasis Tiers
 
-| Style | Description | Best For |
-|-------|-------------|----------|
-| `minimal-dramatic` | Single word, center, dark bg | Hooks, dramatic moments |
-| `dynamic-stack` | Words stack/build vertically | Building tension |
-| `explosive-center` | Words burst from center | Peak moments |
-| `slide-cascade` | Words slide in sequence | Lists, features |
-| `typewriter` | Character-by-character | Technical, precise |
-| `wave-flow` | Words follow wave motion | Calm, flowing sections |
-| `glitch-digital` | Glitchy, tech aesthetic | Tech topics |
-| `handwritten` | Organic, personal feel | Emotional moments |
+| Tier | Visual Effect | When to Use |
+|------|---------------|-------------|
+| `hero` | Largest, uppercase, max glow | Key message words, hooks, turning points |
+| `strong` | Medium, accent color | Supporting emphasis |
+| (unmarked) | Normal size | Context/flow words |
 
-### Word Treatment Animations
+### Grouping Guidelines
 
-| Treatment | Remotion Pattern |
-|-----------|------------------|
-| `fade-in-center` | Opacity 0→1, centered |
-| `slide-from-sides` | X offset ±200px → 0 |
-| `scale-bounce` | Scale 0.5→1.2→1 with spring |
-| `rotate-in` | Rotation ±15° → 0 |
-| `blur-reveal` | Blur 20px → 0 |
-| `color-shift` | Gray → accent color |
-| `glow-pulse` | Box-shadow pulse animation |
+| Group Size | Best For |
+|------------|----------|
+| 1 word | Dramatic pauses, hooks, key moments |
+| 2-3 words | Phrases, statements |
+| 4-5 words | Flowing sentences |
+| 6-7 words | Dense info, fast sections |
+
+**Rules:**
+- Max 1 hero per group
+- Max 2 strong per group
+- Don't emphasize filler words (a, the, is, and)
+
+See [templates/director-script-template.md](templates/director-script-template.md) for detailed format.
 
 ---
 
@@ -193,7 +220,111 @@ The `--json` flag outputs word-level timing data needed for animation sync.
 
 ---
 
-## Step 5: Create Kinetic Typography
+## Step 5: Merge Director's Script + Transcript
+
+Combine the director's planning with actual word timings:
+
+```bash
+cd ~/.claude/skills/kinetic-video-creator/scripts
+npx ts-node merge-director-transcript.ts \
+  -d /path/to/director-script.json \
+  -t /path/to/transcript.json \
+  -o /path/to/enhanced-word-timings.json
+```
+
+**Output:** `enhanced-word-timings.json` with pre-assigned `tier` and `groupId` for each word.
+
+The Remotion composition will now use Claude's planned grouping/emphasis instead of auto-detection.
+
+---
+
+## Step 6: Asset Research
+
+Search, download, and curate reference images for B-roll generation.
+
+### Workflow
+
+1. **Search** - Use WebSearch to find relevant images (logos, products, people, concepts)
+2. **Download** - Save promising images to `assets/raw/`
+3. **Review** - Read each image, assess quality and relevance
+4. **Curate** - Keep best 5-10 images in `assets/curated/`
+
+### Asset Types
+
+| Type | Examples | Use For |
+|------|----------|---------|
+| `logo` | Company logos, brand marks | Brand reveals, intros |
+| `product` | Screenshots, product photos | Feature showcases |
+| `person` | Portraits, team photos | Testimonials, about sections |
+| `concept` | Abstract, illustrative | Visual metaphors |
+| `scene` | Environments, workspaces | Context, atmosphere |
+
+### Curated Assets Manifest
+
+Create `assets/manifest.json`:
+
+```json
+{
+  "assets": [
+    {
+      "filename": "curated/logo.png",
+      "type": "logo",
+      "description": "Company logo, clean white version",
+      "quality": "high",
+      "use_for": "intro and outro"
+    },
+    {
+      "filename": "curated/workspace.jpg",
+      "type": "scene",
+      "description": "Modern tech workspace with laptop",
+      "quality": "high",
+      "use_for": "b-roll reference"
+    }
+  ]
+}
+```
+
+---
+
+## Step 7: B-Roll Generation
+
+Generate styled images using curated assets as references.
+
+### Using Image Generation Skill
+
+```bash
+cd ~/.claude/skills/image-generation/scripts
+
+# With reference images
+npx ts-node generate_poster.ts \
+  --assets "/path/to/assets/curated/logo.png,/path/to/assets/curated/workspace.jpg" \
+  -a 9:16 \
+  -d /path/to/assets/b-roll/scene1.jpg \
+  "Cinematic wide shot of modern tech workspace, dramatic lighting, shallow depth of field"
+```
+
+### B-Roll Prompt Patterns
+
+| Purpose | Prompt Pattern |
+|---------|---------------|
+| Product showcase | "Floating [product] with soft glow, dark background, professional product photography" |
+| Concept visual | "Abstract visualization of [concept], cinematic, moody lighting" |
+| Workspace scene | "Modern [workspace type], dramatic lighting, shallow depth of field" |
+| Tech aesthetic | "Futuristic [subject], neon accents, dark background, high-tech feel" |
+
+### Output Structure
+
+```
+assets/
+├── raw/           # Downloaded from web
+├── curated/       # Best quality, kept for reference
+├── b-roll/        # Generated images for video
+└── manifest.json  # Asset descriptions
+```
+
+---
+
+## Step 8: Create Kinetic Typography
 
 ### Project Setup
 
@@ -204,8 +335,8 @@ cd /path/to/remotion-project
 ### Composition Structure
 
 Create a composition that:
-1. Imports word timing from transcript JSON
-2. Applies segment styles from storyboard
+1. Imports enhanced word timings (with tier/groupId)
+2. Uses pre-assigned emphasis from director's script
 3. Renders word-by-word with tween animations
 
 See [templates/remotion-composition.md](templates/remotion-composition.md) for detailed implementation.
@@ -213,14 +344,14 @@ See [templates/remotion-composition.md](templates/remotion-composition.md) for d
 ### Key Animation Principles
 
 1. **Sync to Speech**: Each word appears at its exact timestamp
-2. **Vary by Segment**: Different styles per storyboard segment
-3. **Emphasis Detection**: Special treatment for emphasis_words
+2. **Use Director's Emphasis**: Respect pre-assigned hero/strong tiers
+3. **Follow Group Boundaries**: Screen transitions at group changes
 4. **Natural Rhythm**: Words stay visible appropriate duration
 5. **Smooth Transitions**: Use springs, not linear easing
 
 ---
 
-## Step 6: Generate Background Music
+## Step 9: Generate Background Music
 
 Use the **music-generator** skill:
 
@@ -262,7 +393,7 @@ Create sections matching your storyboard emotional arc:
 
 ---
 
-## Step 7: Render Final Video
+## Step 10: Render Final Video
 
 ### Merge Audio
 
@@ -293,7 +424,7 @@ npx remotion render CompositionName output.mp4
 
 ---
 
-## Step 8: Upload to YouTube (Optional)
+## Step 11: Upload to YouTube (Optional)
 
 Use the **youtube-uploader** skill:
 
@@ -315,13 +446,16 @@ npx ts-node youtube-upload.ts \
 For topic: **"The Future of AI Assistants"** with **inspirational** tone:
 
 1. Write script with emotional brackets → `script.txt`
-2. Create storyboard JSON → `storyboard.json`
+2. Create director's script with word groups/emphasis → `director-script.json`
 3. Generate speech: `/speech-generator script.txt`
 4. Transcribe: `/transcribe speech.mp3`
-5. Create Remotion composition following storyboard
-6. Generate music matching emotional arc
-7. Merge audio & render
-8. Upload to YouTube
+5. Merge director + transcript → `enhanced-word-timings.json`
+6. Research & download relevant images → `assets/curated/`
+7. Generate B-roll images using references → `assets/b-roll/`
+8. Create Remotion composition with enhanced timings
+9. Generate music matching emotional arc
+10. Merge audio & render
+11. Upload to YouTube
 
 ---
 
@@ -329,9 +463,12 @@ For topic: **"The Future of AI Assistants"** with **inspirational** tone:
 
 After completion, you'll have:
 - `script.txt` - The speech text
-- `storyboard.json` - Animation plan
+- `director-script.json` - Word groups + emphasis (Claude's planning)
 - `speech.mp3` - TTS audio
 - `transcript.json` - Word timing data
+- `enhanced-word-timings.json` - Merged transcript + director planning
+- `assets/curated/` - Selected reference images
+- `assets/b-roll/` - Generated B-roll images
 - `music.mp3` - Background music
 - `final_audio.mp3` - Merged speech + music
 - `output.mp4` - Final rendered video

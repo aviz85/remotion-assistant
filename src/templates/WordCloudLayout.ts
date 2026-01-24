@@ -18,6 +18,9 @@ export interface WordTiming {
   word: string;
   start: number;
   end: number;
+  // Optional pre-assigned values from Director's Script
+  tier?: 'hero' | 'strong' | 'normal';  // Pre-assigned emphasis (skips auto-calculation)
+  groupId?: number;  // Pre-assigned group (skips gap-based detection)
 }
 
 export interface PlacedWord {
@@ -63,6 +66,7 @@ export interface LayoutOptions {
   normalFontSize?: number;
   marginX?: number;
   marginY?: number;
+  rtl?: boolean;  // Right-to-left layout for Hebrew
 }
 
 const KEYWORDS = [
@@ -199,15 +203,8 @@ function pickLayoutMode(groupIndex: number, wordCount: number): LayoutMode {
 }
 
 // ============================================
-// SHELF-BASED PACKING
+// SHELF-BASED PACKING (with RTL support)
 // ============================================
-
-interface Shelf {
-  y: number;
-  height: number;
-  usedWidth: number;
-  items: PlacedWord[];
-}
 
 interface ShelfWord {
   word: string;
@@ -218,9 +215,14 @@ interface ShelfWord {
   width: number;
   height: number;
   shelfIndex: number;
-  xInShelf: number;  // Position within shelf
+  xInShelf: number;  // Position within shelf (LTR order, flipped for RTL at render)
 }
 
+/**
+ * Pack words into shelves - plan everything first, then center vertically.
+ * Words are tightly packed with small spacing.
+ * RTL: Words flow right-to-left within each shelf.
+ */
 function packShelves(
   words: Array<{ word: string; fontSize: number; importance: number; tier: 'hero' | 'strong' | 'normal'; timestamp: number }>,
   frameWidth: number,
@@ -232,6 +234,7 @@ function packShelves(
   const marginY = options.marginY ?? 0;
   const availableWidth = frameWidth - marginX * 2;
   const availableHeight = frameHeight - marginY * 2;
+  const isRtl = options.rtl ?? false;
 
   // Measure all words using proper text measurement
   const measured = words.map(w => ({
@@ -246,7 +249,7 @@ function packShelves(
     let wordPlaced = false;
 
     // Space width proportional to font size (like a real space character)
-    const spaceWidth = word.fontSize * 0.35;
+    const spaceWidth = word.fontSize * 0.25;
 
     // Try to fit on existing shelf
     for (let shelfIdx = 0; shelfIdx < shelves.length; shelfIdx++) {
@@ -284,8 +287,9 @@ function packShelves(
     }
   }
 
-  // Calculate total height
+  // Calculate total height of all shelves
   const totalHeight = shelves.reduce((sum, shelf) => sum + shelf.height, 0);
+  // Center the entire block vertically
   const offsetY = (availableHeight - totalHeight) / 2;
 
   // Build final placed words with proper positioning
@@ -297,10 +301,15 @@ function packShelves(
     const shelfOffsetX = (availableWidth - shelf.usedWidth) / 2;
 
     for (const word of shelf.words) {
+      // For RTL: flip X position within shelf (first word on right)
+      const xPosition = isRtl
+        ? marginX + shelfOffsetX + (shelf.usedWidth - word.xInShelf - word.width)
+        : marginX + shelfOffsetX + word.xInShelf;
+
       placed.push({
         word: word.word,
-        x: marginX + shelfOffsetX + word.xInShelf,
-        y: currentY + (shelf.height - word.height) / 2,
+        x: xPosition,
+        y: currentY + (shelf.height - word.height) / 2,  // Vertically center within shelf
         width: word.width,
         height: word.height,
         fontSize: word.fontSize,
@@ -339,13 +348,8 @@ export function layoutWordCloud(
 
   const mode = pickLayoutMode(groupIndex, words.length);
 
-  // Score words
-  const scored = words.map((w, i) => ({
-    word: w.word,
-    timestamp: w.start,
-    importance: getWordImportance(w.word, i, words.length),
-    index: i,
-  }));
+  // Check if any words have pre-assigned tiers (from Director's Script)
+  const hasPreAssignedTiers = words.some(w => w.tier !== undefined);
 
   // Calculate available width for text (with margins)
   const marginX = options.marginX ?? 0;
@@ -354,7 +358,38 @@ export function layoutWordCloud(
   // Assign tiers based on mode, clamping font size to fit screen
   let tiered: Array<{ word: string; fontSize: number; importance: number; tier: 'hero' | 'strong' | 'normal'; timestamp: number }>;
 
-  if (mode === 'all-equal') {
+  if (hasPreAssignedTiers) {
+    // Use pre-assigned tiers from Director's Script (intelligent planning)
+    // Add deterministic size variation within each tier for visual variety (wall-like blocks)
+    tiered = words.map((w, i) => {
+      const tier = w.tier ?? 'normal';  // Default to normal if not specified
+      const importance = tier === 'hero' ? 100 : tier === 'strong' ? 70 : 40;
+
+      // Deterministic variation based on word index and content
+      // Creates pattern: smaller, base, larger, base, smaller... with word-length influence
+      const baseSize = FONT_SIZES[tier];
+      const wordLengthFactor = w.word.length > 5 ? -0.08 : w.word.length < 3 ? 0.1 : 0;
+      const indexPattern = [0, 0.12, -0.1, 0.05, -0.08, 0.15, -0.05, 0.08];
+      const indexFactor = indexPattern[i % indexPattern.length];
+      const variedSize = Math.round(baseSize * (1 + indexFactor + wordLengthFactor));
+
+      const safeFontSize = getMaxSafeFontSize(w.word, tier, variedSize, availableWidth);
+      return {
+        word: w.word,
+        fontSize: safeFontSize,
+        importance,
+        tier,
+        timestamp: w.start,
+      };
+    });
+  } else if (mode === 'all-equal') {
+    // Score words for auto-calculation
+    const scored = words.map((w, i) => ({
+      word: w.word,
+      timestamp: w.start,
+      importance: getWordImportance(w.word, i, words.length),
+      index: i,
+    }));
     // All words same size (clamped to fit)
     tiered = scored.map(w => {
       const tier = 'strong' as const;
@@ -368,6 +403,13 @@ export function layoutWordCloud(
       };
     });
   } else if (mode === 'stacked') {
+    // Score words for auto-calculation
+    const scored = words.map((w, i) => ({
+      word: w.word,
+      timestamp: w.start,
+      importance: getWordImportance(w.word, i, words.length),
+      index: i,
+    }));
     // Decreasing sizes top to bottom (clamped to fit)
     tiered = scored.map((w, i) => {
       const tier = i === 0 ? 'hero' : i < 3 ? 'strong' : 'normal';
@@ -381,6 +423,13 @@ export function layoutWordCloud(
       };
     });
   } else {
+    // Score words for auto-calculation
+    const scored = words.map((w, i) => ({
+      word: w.word,
+      timestamp: w.start,
+      importance: getWordImportance(w.word, i, words.length),
+      index: i,
+    }));
     // Hero-based: find most important (clamped to fit)
     const maxImportance = Math.max(...scored.map(s => s.importance));
     tiered = scored.map(w => {
@@ -423,6 +472,34 @@ export function detectGroups(
 ): WordGroup[] {
   if (words.length === 0) return [];
 
+  // Check if words have pre-assigned groupIds (from Director's Script)
+  const hasPreAssignedGroups = words.some(w => w.groupId !== undefined);
+
+  if (hasPreAssignedGroups) {
+    // Use pre-assigned groups from Director's Script
+    const groupMap = new Map<number, WordTiming[]>();
+
+    for (const word of words) {
+      const groupId = word.groupId ?? 0;
+      if (!groupMap.has(groupId)) {
+        groupMap.set(groupId, []);
+      }
+      groupMap.get(groupId)!.push(word);
+    }
+
+    // Sort by groupId and convert to WordGroup[]
+    const sortedGroupIds = Array.from(groupMap.keys()).sort((a, b) => a - b);
+    return sortedGroupIds.map(groupId => {
+      const groupWords = groupMap.get(groupId)!;
+      return {
+        words: groupWords,
+        startTime: groupWords[0].start,
+        endTime: groupWords[groupWords.length - 1].end,
+      };
+    });
+  }
+
+  // Fallback: auto-detect groups based on time gaps
   const groups: WordGroup[] = [];
   let currentGroup: WordTiming[] = [words[0]];
 

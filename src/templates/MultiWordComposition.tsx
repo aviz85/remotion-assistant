@@ -47,6 +47,8 @@ export interface MultiWordCompositionProps {
   normalFontSize?: number;
   marginX?: number;
   marginY?: number;
+  // Layout
+  rtl?: boolean;  // Right-to-left for Hebrew
   // Visual Effects
   glowIntensity?: number;
   particleDensity?: number;
@@ -443,6 +445,7 @@ export const MultiWordComposition: React.FC<MultiWordCompositionProps> = ({
   normalFontSize = 60,
   marginX = 0,
   marginY = 0,
+  rtl = false,
   // VFX props with defaults
   glowIntensity = 1,
   particleDensity = 1,
@@ -466,7 +469,8 @@ export const MultiWordComposition: React.FC<MultiWordCompositionProps> = ({
     normalFontSize,
     marginX,
     marginY,
-  }), [heroFontSize, strongFontSize, normalFontSize, marginX, marginY]);
+    rtl,
+  }), [heroFontSize, strongFontSize, normalFontSize, marginX, marginY, rtl]);
 
   // Pre-compute all screen layouts (memoized)
   const screens = useMemo(() =>

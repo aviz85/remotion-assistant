@@ -1,6 +1,46 @@
 # Remotion Kinetic Typography Template
 
-## Composition Structure
+## Display Mode Selection
+
+Choose template based on user's requested mode:
+
+| Mode | Template File | Import |
+|------|--------------|--------|
+| `cloud` (default) | `MultiWordComposition.tsx` | `import { MultiWordComposition } from '../templates/MultiWordComposition'` |
+| `single` | `SequenceComposition.tsx` | `import { SequenceComposition } from '../templates/SequenceComposition'` |
+
+### Word Cloud Mode (`cloud`)
+```tsx
+<MultiWordComposition
+  wordTimings={WORD_TIMINGS}
+  audioFile="project-folder/final_audio.mp3"
+  gapThreshold={0.4}
+  maxWordsPerGroup={6}
+  heroFontSize={140}
+  strongFontSize={90}
+  normalFontSize={60}
+  glowIntensity={1.2}
+  dustEnabled={true}
+  lightBeamsEnabled={true}
+/>
+```
+
+### Single Word Mode (`single`)
+```tsx
+<SequenceComposition
+  wordTimings={WORD_TIMINGS}
+  audioFile="project-folder/final_audio.mp3"
+  baseFontSize={200}
+  dustEnabled={true}
+  lightBeamsEnabled={true}
+  centerGlowEnabled={true}
+  glowIntensity={1}
+/>
+```
+
+---
+
+## Legacy: Manual Composition Structure
 
 ```tsx
 import { AbsoluteFill, Audio, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';

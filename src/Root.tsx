@@ -19,6 +19,17 @@ import { MultiWordDemo } from "./compositions/MultiWordDemo";
 import { YuvalManzura } from "./compositions/YuvalManzura";
 import { YuvalManzuraHebrew } from "./compositions/YuvalManzuraHebrew";
 import { DreemzPromo } from "./compositions/DreemzPromo";
+import { PersistenceVideo } from "./compositions/PersistenceVideo";
+import { MinimalismVideo } from "./compositions/MinimalismVideo";
+import { MorningVideo } from "./compositions/MorningVideo";
+import { CourageVideo } from "./compositions/CourageVideo";
+import { SleepVideo } from "./compositions/SleepVideo";
+import { SwimmingLessonVideo } from "./compositions/SwimmingLessonVideo";
+import { TelAvivWeather } from "./compositions/TelAvivWeather";
+import { ChabadParshaYitro } from "./compositions/ChabadParshaYitro";
+import { ClaudeCodePromo } from "./compositions/ClaudeCodePromo";
+import { LoveVideo } from "./compositions/LoveVideo";
+import { YehudaVideo } from "./compositions/YehudaVideo";
 
 // Schema for FocusTemplateDemo (single word) with slider controls
 const focusTemplateDemoSchema = z.object({
@@ -402,6 +413,259 @@ export const RemotionRoot: React.FC = () => {
             textStroke: 0,
             animationSpeed: 1,
           }}
+        />
+        <Composition
+          id="PersistenceVideo"
+          component={PersistenceVideo}
+          durationInFrames={1520}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            heroFontSize: 140,
+            strongFontSize: 90,
+            normalFontSize: 60,
+            marginX: 40,
+            marginY: 80,
+            gapThreshold: 0.4,
+            maxWordsPerGroup: 6,
+            glowIntensity: 1.2,
+            particleDensity: 1,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: -1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
+          }}
+        />
+        <Composition
+          id="MinimalismVideo"
+          component={MinimalismVideo}
+          durationInFrames={1460}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            heroFontSize: 140,
+            strongFontSize: 90,
+            normalFontSize: 60,
+            marginX: 40,
+            marginY: 80,
+            gapThreshold: 0.4,
+            maxWordsPerGroup: 6,
+            glowIntensity: 1.2,
+            particleDensity: 1,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: -1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
+          }}
+        />
+        <Composition
+          id="MorningVideo"
+          component={MorningVideo}
+          durationInFrames={1550}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            heroFontSize: 140,
+            strongFontSize: 90,
+            normalFontSize: 60,
+            marginX: 40,
+            marginY: 80,
+            gapThreshold: 0.4,
+            maxWordsPerGroup: 6,
+            glowIntensity: 1.2,
+            particleDensity: 1,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: -1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
+          }}
+        />
+        <Composition
+          id="CourageVideo"
+          component={CourageVideo}
+          durationInFrames={1560}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            heroFontSize: 140,
+            strongFontSize: 90,
+            normalFontSize: 60,
+            marginX: 40,
+            marginY: 80,
+            gapThreshold: 0.4,
+            maxWordsPerGroup: 6,
+            glowIntensity: 1.2,
+            particleDensity: 1,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: -1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
+          }}
+        />
+        <Composition
+          id="SleepVideo"
+          component={SleepVideo}
+          durationInFrames={1600}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            heroFontSize: 140,
+            strongFontSize: 90,
+            normalFontSize: 60,
+            marginX: 40,
+            marginY: 80,
+            gapThreshold: 0.4,
+            maxWordsPerGroup: 6,
+            glowIntensity: 1.2,
+            particleDensity: 1,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: -1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
+          }}
+        />
+        <Composition
+          id="SwimmingLessonVideo"
+          component={SwimmingLessonVideo}
+          durationInFrames={3150}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            heroFontSize: 140,
+            strongFontSize: 90,
+            normalFontSize: 60,
+            marginX: 40,
+            marginY: 80,
+            gapThreshold: 0.4,
+            maxWordsPerGroup: 6,
+            glowIntensity: 1.2,
+            particleDensity: 1,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: -1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
+          }}
+        />
+      </Folder>
+
+      {/* Weather */}
+      <Folder name="Weather">
+        <Composition
+          id="TelAvivWeather"
+          component={TelAvivWeather}
+          durationInFrames={360}
+          fps={30}
+          width={1920}
+          height={1080}
+        />
+      </Folder>
+
+      {/* Chabad */}
+      <Folder name="Chabad">
+        <Composition
+          id="ChabadParshaYitro"
+          component={ChabadParshaYitro}
+          durationInFrames={1350}
+          fps={30}
+          width={1080}
+          height={1920}
+          defaultProps={{
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            glowIntensity: 1,
+          }}
+        />
+      </Folder>
+
+      {/* Promo Videos */}
+      <Folder name="Promo">
+        <Composition
+          id="ClaudeCodePromo"
+          component={ClaudeCodePromo}
+          durationInFrames={1830}
+          fps={30}
+          width={1080}
+          height={1920}
+          schema={multiWordDemoSchema}
+          defaultProps={{
+            heroFontSize: 160,
+            strongFontSize: 100,
+            normalFontSize: 70,
+            marginX: 50,
+            marginY: 100,
+            gapThreshold: 0.5,
+            maxWordsPerGroup: 7,
+            glowIntensity: 1.3,
+            particleDensity: 1.2,
+            backgroundPulse: true,
+            wordEntranceStyle: 'pop' as const,
+            colorScheme: 1,
+            screenShake: 0,
+            dustEnabled: true,
+            lightBeamsEnabled: true,
+            textStroke: 0,
+            animationSpeed: 1,
+          }}
+        />
+      </Folder>
+
+      {/* Love */}
+      <Folder name="Love">
+        <Composition
+          id="LoveVideo"
+          component={LoveVideo}
+          durationInFrames={900}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+      </Folder>
+
+      {/* Kids */}
+      <Folder name="Kids">
+        <Composition
+          id="YehudaVideo"
+          component={YehudaVideo}
+          durationInFrames={1090}
+          fps={30}
+          width={1080}
+          height={1920}
         />
       </Folder>
     </>

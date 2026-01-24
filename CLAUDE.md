@@ -1,12 +1,65 @@
-# Remotion Assistant
+# CLAUDE.md
 
-Video generation project using Remotion (React-based video framework).
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Quick Start
+## Quick Commands
 
 ```bash
-npm run dev       # Open studio (http://localhost:3000)
+npm run dev       # Studio at http://localhost:3000
 npm run render    # Render video
+npx remotion render [CompositionId] out/video.mp4
+npx remotion render [CompositionId] out/video.mp4 --props='{"text":"Hello"}'
+npx remotion compositions src/index.tsx  # List compositions
+```
+
+## Architecture
+
+### Core Templates (src/templates/)
+
+**MultiWordComposition.tsx** - Primary template for word cloud videos
+- Groups words on screen using shelf-packing layout
+- VFX: dust particles, light beams, center glow, background pulse
+- Color schemes cycle per screen, entrance styles: pop/slide/fade/glitch
+- Props: `wordTimings[]`, `audioFile`, font sizes, VFX controls
+
+**SequenceComposition.tsx** - Single word at a time
+- One word fills screen per timestamp
+- Classic kinetic typography style
+
+**WordCloudLayout.ts** - Layout engine
+- Uses `@remotion/layout-utils` for accurate text measurement
+- `detectGroups()` - Groups words by gap threshold
+- `layoutWordCloud()` - Bin-packs words on shelves
+- `computeAllScreens()` - Pre-computes all layouts for a video
+
+### Word Timing Data
+
+Compositions expect `WordTiming[]`:
+```typescript
+interface WordTiming {
+  word: string;
+  start: number;  // seconds
+  end: number;
+}
+```
+
+Generate from audio via transcription → JSON output.
+
+### Creating New Compositions
+
+1. Import word timings (usually from JSON file in `public/`)
+2. Define `durationInFrames` based on audio length
+3. Pass to `MultiWordComposition` or build custom
+4. Register in `Root.tsx` within appropriate `<Folder>`
+
+### Zod Schemas
+
+Use zod schemas for compositions with studio-editable props (sliders):
+```tsx
+const schema = z.object({
+  heroFontSize: z.number().min(50).max(400).default(140),
+});
+<Composition schema={schema} defaultProps={{...}} />
 ```
 
 ## Skills (Invoke with /skill-name)
@@ -14,108 +67,48 @@ npm run render    # Render video
 | Skill | Use Case |
 |-------|----------|
 | `/remotion-render` | Core rendering commands |
+| `/kinetic-video-creator` | Full workflow: script → TTS → transcribe → animate → music → render |
 | `/text-video` | Kinetic typography, text reveals |
 | `/social-video` | Instagram, TikTok, YouTube formats |
-| `/audiogram` | Podcast/music visualizations |
 | `/video-effects` | Transitions and visual effects |
-| `/countdown-timer` | Countdowns, progress rings |
-| `/carousel-slides` | Multi-slide carousels, quotes |
-| `/logo-animation` | Logo reveals, SVG drawing |
-| `/comparison-video` | Before/after split screens |
-| `/data-visualization` | Stats, numbers, progress bars |
-| `/particle-effects` | Particle text, assembly effects |
+| `/remotion-best-practices` | Official patterns for audio, video, fonts, timing |
 
-## Available Compositions
+## Key Patterns
 
-### Text Animations
-- `TextReveal` - Word-by-word reveal
-- `QuoteCarousel` - Multi-quote carousel
-- `ParticleText` - Text from particles
-
-### Social Media
-- `SocialPost-Square` (1080x1080)
-- `SocialPost-Story` (1080x1920)
-- `SocialPost-Landscape` (1920x1080)
-
-### Data & Stats
-- `AnimatedStats` - Number counting, progress bars
-
-### Comparisons
-- `SplitScreen` - Before/after with divider
-
-### Branding
-- `LogoReveal` - SVG shape animations
-
-### Timers
-- `Countdown` - Numeric countdown with ring
-
-### Audio
-- `Audiogram` - Waveform visualization
-
-## Project Structure
-
-```
-src/
-├── Root.tsx              # Composition registry
-├── compositions/         # Video compositions
-│   ├── HelloWorld.tsx
-│   ├── TextReveal.tsx
-│   ├── QuoteCarousel.tsx
-│   ├── ParticleText.tsx
-│   ├── SocialPost.tsx
-│   ├── SplitScreen.tsx
-│   ├── LogoReveal.tsx
-│   ├── Countdown.tsx
-│   ├── AnimatedStats.tsx
-│   └── Audiogram.tsx
-└── components/           # Reusable components
-
-projects/                 # Learning/experiment docs
-├── 01-countdown/
-├── 02-quote-carousel/
-├── 03-logo-reveal/
-├── 04-split-screen/
-├── 05-animated-stats/
-└── 06-particle-text/
-
-public/                   # Static assets
-out/                      # Rendered output
-```
-
-## Common Commands
-
-```bash
-# List compositions
-npx remotion compositions src/index.tsx
-
-# Render specific composition
-npx remotion render HelloWorld out/hello.mp4
-
-# Render with custom props
-npx remotion render TextReveal out/text.mp4 --props='{"text":"Hello"}'
-
-# Preview render (half size)
-npx remotion render HelloWorld out/preview.mp4 --scale=0.5
-```
-
-## Key Animation Patterns
-
-### Spring
+### Animation
 ```tsx
+// Spring
 const scale = spring({ frame, fps, config: { damping: 12, stiffness: 100 } });
-```
 
-### Interpolate
-```tsx
+// Interpolate with clamp
 const opacity = interpolate(frame, [0, 30], [0, 1], { extrapolateRight: "clamp" });
-```
 
-### Staggered Delay
-```tsx
+// Staggered delay
 items.map((item, i) => {
   const delay = i * 10;
   const opacity = interpolate(frame - delay, [0, 20], [0, 1]);
 });
 ```
 
-See skills for detailed patterns per video type.
+### Audio in Remotion
+- Files MUST be in `public/` folder
+- Use `staticFile()`: `<Audio src={staticFile("audio.mp3")} />`
+
+### Rendering
+```bash
+# With merged audio (speech + music)
+ffmpeg -y -i speech.mp3 -i music.mp3 \
+  -filter_complex "[0:a]volume=1.0[speech];[1:a]volume=0.15[music];[speech][music]amix=inputs=2[out]" \
+  -map "[out]" final.mp3
+
+# Then render
+npx remotion render CompositionId out/video.mp4
+```
+
+## Folder Organization
+
+- `src/compositions/` - Video compositions (one file per video type)
+- `src/templates/` - Reusable composition templates and layout algorithms
+- `public/` - Audio files, images, static assets (required for `staticFile()`)
+- `out/` - Rendered output
+- `projects/` - Learning/experiment docs
