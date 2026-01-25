@@ -30,6 +30,8 @@ import { ChabadParshaYitro } from "./compositions/ChabadParshaYitro";
 import { ClaudeCodePromo } from "./compositions/ClaudeCodePromo";
 import { LoveVideo } from "./compositions/LoveVideo";
 import { YehudaVideo } from "./compositions/YehudaVideo";
+import { YehudaVideoIntercuts } from "./compositions/YehudaVideoIntercuts";
+import { AGISubtitles } from "./compositions/AGISubtitles";
 
 // Schema for FocusTemplateDemo (single word) with slider controls
 const focusTemplateDemoSchema = z.object({
@@ -666,6 +668,30 @@ export const RemotionRoot: React.FC = () => {
           fps={30}
           width={1080}
           height={1920}
+        />
+        <Composition
+          id="YehudaVideoIntercuts"
+          component={YehudaVideoIntercuts}
+          durationInFrames={1090}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+      </Folder>
+
+      {/* AGI / AI Videos */}
+      <Folder name="AGI">
+        <Composition
+          id="AGISubtitles"
+          component={AGISubtitles}
+          durationInFrames={475}
+          fps={25}
+          width={1920}
+          height={1080}
+          defaultProps={{
+            showMusic: true,
+            musicVolume: 0.15,
+          }}
         />
       </Folder>
     </>
