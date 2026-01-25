@@ -34,6 +34,7 @@ import { YehudaVideoIntercuts } from "./compositions/YehudaVideoIntercuts";
 import { AGISubtitles } from "./compositions/AGISubtitles";
 import { SurpriseNonsense } from "./compositions/SurpriseNonsense";
 import { ParashaBoVideo } from "./compositions/ParashaBoVideo";
+import { AgentPromoVideo } from "./compositions/AgentPromoVideo";
 
 // Schema for FocusTemplateDemo (single word) with slider controls
 const focusTemplateDemoSchema = z.object({
@@ -654,6 +655,14 @@ export const RemotionRoot: React.FC = () => {
             textStroke: 0,
             animationSpeed: 1,
           }}
+        />
+        <Composition
+          id="AgentPromoVideo"
+          component={AgentPromoVideo}
+          durationInFrames={1200}
+          fps={30}
+          width={1920}
+          height={1080}
         />
       </Folder>
 

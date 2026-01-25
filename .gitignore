@@ -42,3 +42,5 @@ npm-debug.log*
 # Temporary
 tmp/
 temp/
+public/agi_cut.mp4
+public/agi_music.mp3
