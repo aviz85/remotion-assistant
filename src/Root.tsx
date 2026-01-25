@@ -32,6 +32,7 @@ import { LoveVideo } from "./compositions/LoveVideo";
 import { YehudaVideo } from "./compositions/YehudaVideo";
 import { YehudaVideoIntercuts } from "./compositions/YehudaVideoIntercuts";
 import { AGISubtitles } from "./compositions/AGISubtitles";
+import { SurpriseNonsense } from "./compositions/SurpriseNonsense";
 
 // Schema for FocusTemplateDemo (single word) with slider controls
 const focusTemplateDemoSchema = z.object({
@@ -692,6 +693,18 @@ export const RemotionRoot: React.FC = () => {
             showMusic: true,
             musicVolume: 0.15,
           }}
+        />
+      </Folder>
+
+      {/* Absurdist / Comedy */}
+      <Folder name="Absurd">
+        <Composition
+          id="SurpriseNonsense"
+          component={SurpriseNonsense}
+          durationInFrames={1260}
+          fps={30}
+          width={1080}
+          height={1920}
         />
       </Folder>
     </>
