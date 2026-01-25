@@ -575,16 +575,88 @@
         </div>
     </section>
 
-    <!-- Video Section -->
-    <section id="video" class="video-section">
-        <div class="video-container">
+    <!-- New Features Banner -->
+    <section style="padding: 3rem 2rem; background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.1) 100%); border-top: 1px solid rgba(168, 85, 247, 0.3); border-bottom: 1px solid rgba(168, 85, 247, 0.3);">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <span style="background: var(--hero); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">🆕 עדכון חדש!</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                <div style="text-align: center; padding: 1.5rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🖼️</div>
+                    <h3 style="margin-bottom: 0.5rem; color: #a855f7;">תמונות AI אינטרקטים</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">תמונות שנוצרות אוטומטית ומחליפות את הטקסט ברגעים דרמטיים. Hard cut בין תמונות רצופות!</p>
+                </div>
+                <div style="text-align: center; padding: 1.5rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
+                    <h3 style="margin-bottom: 0.5rem; color: #6366f1;">סטוריבורד אוטומטי</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Claude מחליט מתי להראות טקסט ומתי תמונה. 60% טקסט, 40% תמונות - קצב מושלם.</p>
+                </div>
+                <div style="text-align: center; padding: 1.5rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+                    <h3 style="margin-bottom: 0.5rem; color: #22c55e;">אוטונומי לגמרי</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">מרעיון → יוטיוב → וואטסאפ. בלי התערבות. רק תנו נושא וקבלו סרטון לטלפון.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="video" class="video-section" style="max-width: 1200px;">
+        <div class="section-title" style="margin-bottom: 2rem;">
+            <h2>דוגמאות</h2>
+            <p class="english">Videos Created with This Skill</p>
+        </div>
+
+        <!-- Main Featured Video -->
+        <div class="video-container" style="margin-bottom: 3rem;">
             <iframe
                 src="https://www.youtube.com/embed/PNBV4FNMreE"
-                title="Kinetic Video Example"
+                title="Yehuda - Kinetic Video with Image Intercuts"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen>
             </iframe>
+        </div>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem;">
+            🎬 יהודה אתה מדהים - סרטון עם אינטרקטים של תמונות AI
+        </p>
+
+        <!-- Video Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+            <!-- Rubber Duck Video -->
+            <div>
+                <div class="video-container" style="box-shadow: 0 15px 50px rgba(168, 85, 247, 0.3);">
+                    <iframe
+                        src="https://www.youtube.com/embed/2HnGCEsoGFk"
+                        title="Rubber Duck Philosophy"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem; font-size: 0.95rem;">
+                    🦆 הגיגים פילוסופיים של ברווז גומי<br>
+                    <span class="english" style="font-size: 0.85rem;">Full Autonomous Mode Test</span>
+                </p>
+            </div>
+
+            <!-- Parasha Video -->
+            <div id="parasha-video-container">
+                <div class="video-container" style="box-shadow: 0 15px 50px rgba(99, 102, 241, 0.3);">
+                    <iframe
+                        src="https://www.youtube.com/embed/8HFOuAel9H0"
+                        title="Parasha Bo - From Darkness to Light"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem; font-size: 0.95rem;">
+                    🕎 פרשת בא - מחושך לאור<br>
+                    <span class="english" style="font-size: 0.85rem;">Auto-Generated from Web Research</span>
+                </p>
+            </div>
         </div>
     </section>
 
@@ -593,64 +665,85 @@
         <div class="container">
             <div class="section-title">
                 <h2>איך זה עובד?</h2>
-                <p class="english">8-Step Automated Pipeline</p>
+                <p class="english">11-Step Automated Pipeline</p>
             </div>
             <div class="pipeline-steps">
                 <div class="step">
                     <div class="step-number">1</div>
                     <div class="step-icon">📝</div>
                     <h3>כתיבת תסריט</h3>
-                    <p>Claude כותב דיבור דרמטי עם הנחיות רגשיות בסוגריים מרובעים לכיוון הקול</p>
+                    <p>Claude כותב דיבור דרמטי עם הנחיות רגשיות בסוגריים מרובעים</p>
                     <span class="step-tag english">Script Writing</span>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-icon">🎤</div>
-                    <h3>יצירת דיבור</h3>
-                    <p>ElevenLabs מייצר קול מועתק עם אינטונציה ורגש - בעברית או אנגלית</p>
-                    <span class="step-tag english">TTS Generation</span>
+                <div class="step" style="border-color: rgba(168, 85, 247, 0.4); background: linear-gradient(135deg, var(--bg-card) 0%, rgba(168, 85, 247, 0.1) 100%);">
+                    <div class="step-number" style="background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);">2</div>
+                    <div class="step-icon">🎬</div>
+                    <h3>סטוריבורד</h3>
+                    <p>תכנון מתי מופיע טקסט ומתי תמונה - הקסם קורה כאן!</p>
+                    <span class="step-tag" style="background: rgba(168, 85, 247, 0.2); color: #a855f7;">NEW! Storyboard</span>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <div class="step-icon">📊</div>
-                    <h3>תמלול מדויק</h3>
-                    <p>חילוץ תזמון של כל מילה לסנכרון מושלם עם האנימציה</p>
-                    <span class="step-tag english">Word-Level Timing</span>
+                    <div class="step-icon">🎤</div>
+                    <h3>יצירת דיבור</h3>
+                    <p>ElevenLabs מייצר קול מועתק עם אינטונציה ורגש</p>
+                    <span class="step-tag english">TTS Generation</span>
                 </div>
                 <div class="step">
                     <div class="step-number">4</div>
+                    <div class="step-icon">📊</div>
+                    <h3>תמלול מדויק</h3>
+                    <p>חילוץ תזמון של כל מילה + שיפור סמנטי</p>
+                    <span class="step-tag english">Word-Level Timing</span>
+                </div>
+                <div class="step" style="border-color: rgba(168, 85, 247, 0.4); background: linear-gradient(135deg, var(--bg-card) 0%, rgba(168, 85, 247, 0.1) 100%);">
+                    <div class="step-number" style="background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);">5</div>
+                    <div class="step-icon">🖼️</div>
+                    <h3>יצירת תמונות</h3>
+                    <p>תמונות AI לאינטרקטים עם fal.ai FLUX (מהיר וזול!)</p>
+                    <span class="step-tag" style="background: rgba(168, 85, 247, 0.2); color: #a855f7;">NEW! AI Images</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">6</div>
                     <div class="step-icon">🎵</div>
                     <h3>יצירת מוזיקה</h3>
-                    <p>מוזיקה מותאמת לאורך המדויק עם עקומה רגשית תואמת</p>
+                    <p>מוזיקה מותאמת לאורך המדויק עם עקומה רגשית</p>
                     <span class="step-tag english">Music Generation</span>
                 </div>
                 <div class="step">
-                    <div class="step-number">5</div>
+                    <div class="step-number">7</div>
                     <div class="step-icon">🔊</div>
                     <h3>מיקס אודיו</h3>
                     <p>שילוב דיבור ומוזיקה ברמות ווליום מאוזנות</p>
                     <span class="step-tag english">Audio Mixing</span>
                 </div>
                 <div class="step">
-                    <div class="step-number">6</div>
+                    <div class="step-number">8</div>
                     <div class="step-icon">✨</div>
-                    <h3>אנימציית Remotion</h3>
-                    <p>יצירת טיפוגרפיה קינטית עם אפקטים, זוהר וחלקיקים</p>
-                    <span class="step-tag english">Kinetic Typography</span>
+                    <h3>קומפוזיציה</h3>
+                    <p>טיפוגרפיה קינטית + אינטרקטים של תמונות בשכבות</p>
+                    <span class="step-tag english">Composition + Intercuts</span>
                 </div>
                 <div class="step">
-                    <div class="step-number">7</div>
+                    <div class="step-number">9</div>
                     <div class="step-icon">🎬</div>
                     <h3>רנדור וידאו</h3>
-                    <p>המרה לקובץ MP4 באיכות גבוהה בפורמט 9:16 לרשתות</p>
+                    <p>המרה לקובץ MP4 באיכות גבוהה</p>
                     <span class="step-tag english">Video Rendering</span>
                 </div>
                 <div class="step">
-                    <div class="step-number">8</div>
+                    <div class="step-number">10</div>
                     <div class="step-icon">📺</div>
                     <h3>העלאה ליוטיוב</h3>
-                    <p>פרסום אוטומטי עם כותרת, תיאור ותגיות</p>
+                    <p>פרסום אוטומטי (unlisted או public)</p>
                     <span class="step-tag english">YouTube Upload</span>
+                </div>
+                <div class="step" style="border-color: rgba(34, 197, 94, 0.4); background: linear-gradient(135deg, var(--bg-card) 0%, rgba(34, 197, 94, 0.1) 100%);">
+                    <div class="step-number" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">11</div>
+                    <div class="step-icon">📱</div>
+                    <h3>שליחה בוואטסאפ</h3>
+                    <p>וידאו + לינק ליוטיוב ישירות לטלפון</p>
+                    <span class="step-tag" style="background: rgba(34, 197, 94, 0.2); color: #22c55e;">NEW! WhatsApp</span>
                 </div>
             </div>
         </div>
@@ -704,6 +797,20 @@
                     <div class="tech-info">
                         <h4>Claude Code</h4>
                         <p class="english">AI orchestration & skills</p>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon" style="background: linear-gradient(135deg, #a855f7, #6366f1);">🖼</div>
+                    <div class="tech-info">
+                        <h4>fal.ai FLUX</h4>
+                        <p class="english">Fast & cheap AI image generation</p>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">💬</div>
+                    <div class="tech-info">
+                        <h4>WhatsApp API</h4>
+                        <p class="english">Direct delivery to phone</p>
                     </div>
                 </div>
             </div>
@@ -764,10 +871,10 @@
                 <p class="english">Claude Code Skills That Power This</p>
             </div>
             <div class="skills-grid">
-                <div class="skill-card">
-                    <h4>kinetic-video-creator</h4>
-                    <p>הסקיל המרכזי שמנהל את כל התהליך מקצה לקצה</p>
-                    <div class="skill-cmd">/kinetic-video-creator</div>
+                <div class="skill-card" style="border: 2px solid var(--hero); grid-column: span 2;">
+                    <h4 style="font-size: 1.3rem;">kinetic-video-creator</h4>
+                    <p>הסקיל המרכזי - מרעיון ועד וואטסאפ באוטומציה מלאה. כולל סטוריבורד, תמונות AI, והכל!</p>
+                    <div class="skill-cmd">/kinetic-video-creator "נושא" טון</div>
                 </div>
                 <div class="skill-card">
                     <h4>speech-generator</h4>
@@ -781,8 +888,13 @@
                 </div>
                 <div class="skill-card">
                     <h4>transcribe</h4>
-                    <p>תמלול עם תזמון ברמת מילה</p>
+                    <p>תמלול עם תזמון ברמת מילה + שיפור סמנטי</p>
                     <div class="skill-cmd">/transcribe</div>
+                </div>
+                <div class="skill-card" style="border-color: rgba(168, 85, 247, 0.4);">
+                    <h4 style="color: #a855f7;">image-generation</h4>
+                    <p>תמונות AI לאינטרקטים - מהיר וזול עם --cheap</p>
+                    <div class="skill-cmd">/image-generation --cheap "prompt"</div>
                 </div>
                 <div class="skill-card">
                     <h4>remotion-render</h4>
@@ -793,6 +905,11 @@
                     <h4>youtube-uploader</h4>
                     <p>העלאה אוטומטית ליוטיוב</p>
                     <div class="skill-cmd">/youtube-uploader</div>
+                </div>
+                <div class="skill-card" style="border-color: rgba(34, 197, 94, 0.4);">
+                    <h4 style="color: #22c55e;">whatsapp</h4>
+                    <p>שליחת וידאו + לינק ישירות לטלפון</p>
+                    <div class="skill-cmd">/whatsapp --media video.mp4</div>
                 </div>
             </div>
         </div>

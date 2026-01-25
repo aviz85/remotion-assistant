@@ -33,6 +33,7 @@ import { YehudaVideo } from "./compositions/YehudaVideo";
 import { YehudaVideoIntercuts } from "./compositions/YehudaVideoIntercuts";
 import { AGISubtitles } from "./compositions/AGISubtitles";
 import { SurpriseNonsense } from "./compositions/SurpriseNonsense";
+import { ParashaBoVideo } from "./compositions/ParashaBoVideo";
 
 // Schema for FocusTemplateDemo (single word) with slider controls
 const focusTemplateDemoSchema = z.object({
@@ -613,6 +614,14 @@ export const RemotionRoot: React.FC = () => {
             lightBeamsEnabled: true,
             glowIntensity: 1,
           }}
+        />
+        <Composition
+          id="ParashaBoVideo"
+          component={ParashaBoVideo}
+          durationInFrames={900}
+          fps={30}
+          width={1080}
+          height={1920}
         />
       </Folder>
 
