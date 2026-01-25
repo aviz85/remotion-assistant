@@ -191,21 +191,50 @@ const WORD_TIMINGS = [
 ];
 
 // ============================================================
+// HELPER: Check if word falls during any image scene
+// ============================================================
+
+const isWordDuringImage = (wordStart: number, wordEnd: number, scenes: ImageScene[]): boolean => {
+	return scenes.some(scene => {
+		// Word overlaps with image scene if:
+		// word starts before scene ends AND word ends after scene starts
+		return wordStart < scene.endTime && wordEnd > scene.startTime;
+	});
+};
+
+// Filter words to only show those OUTSIDE image windows
+const getVisibleWords = (words: typeof WORD_TIMINGS, scenes: ImageScene[]) => {
+	return words.filter(word => !isWordDuringImage(word.start, word.end, scenes));
+};
+
+// ============================================================
+// HELPER: Check if next image is consecutive (for hard cut)
+// ============================================================
+
+const isNextImageConsecutive = (currentIndex: number, scenes: ImageScene[]): boolean => {
+	if (currentIndex >= scenes.length - 1) return false;
+	const current = scenes[currentIndex];
+	const next = scenes[currentIndex + 1];
+	// Consecutive if next starts within 0.1s of current ending
+	return Math.abs(next.startTime - current.endTime) < 0.1;
+};
+
+// ============================================================
 // IMAGE SCENE COMPONENT
 // Full opacity image that replaces text
-// Fadeout starts AFTER text block ends (extra frames added to Sequence)
+// Hard cut if next image is consecutive, otherwise fadeout AFTER text ends
 // ============================================================
 
 const FADEOUT_FRAMES = 5; // Extra frames for fadeout AFTER text block ends
 
 const ImageSceneComponent: React.FC<{
 	scene: ImageScene;
-}> = ({ scene }) => {
+	isConsecutive: boolean; // True if next image follows immediately
+}> = ({ scene, isConsecutive }) => {
 	const frame = useCurrentFrame();
 	const { fps } = useVideoConfig();
 
 	const textBlockDuration = Math.round((scene.endTime - scene.startTime) * fps);
-	const totalDuration = textBlockDuration + FADEOUT_FRAMES;
 	const progress = Math.min(frame / textBlockDuration, 1); // Cap progress at 1 for zoom
 
 	// Quick fade in (5 frames)
@@ -214,14 +243,24 @@ const ImageSceneComponent: React.FC<{
 		extrapolateRight: 'clamp',
 		easing: Easing.out(Easing.cubic),
 	});
-	// Fadeout starts AFTER text block ends (at textBlockDuration, not before)
-	const fadeOut = interpolate(
-		frame,
-		[textBlockDuration, totalDuration],
-		[1, 0],
-		{ extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
-	);
-	const opacity = Math.min(fadeIn, fadeOut);
+
+	// Fadeout: SKIP if next image is consecutive (hard cut)
+	// Otherwise fade out AFTER text block ends
+	let opacity: number;
+	if (isConsecutive) {
+		// Hard cut - stay at full opacity until the end
+		opacity = fadeIn;
+	} else {
+		// Fade out after text block ends
+		const totalDuration = textBlockDuration + FADEOUT_FRAMES;
+		const fadeOut = interpolate(
+			frame,
+			[textBlockDuration, totalDuration],
+			[1, 0],
+			{ extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+		);
+		opacity = Math.min(fadeIn, fadeOut);
+	}
 
 	// Slow zoom throughout
 	const scale = interpolate(
@@ -262,12 +301,16 @@ const ImageSceneComponent: React.FC<{
 export const YehudaVideoIntercuts: React.FC = () => {
 	const { fps } = useVideoConfig();
 
+	// Filter words to only show those OUTSIDE image windows
+	// This prevents text from rendering during image scenes
+	const visibleWords = getVisibleWords(WORD_TIMINGS, IMAGE_SCENES);
+
 	return (
 		<AbsoluteFill style={{ direction: 'rtl', fontFamily }}>
-			{/* Layer 1: Word Cloud (always renders, covered by images when needed) */}
+			{/* Layer 1: Word Cloud - ONLY words outside image windows */}
 			<Sequence name="Word Cloud" from={0}>
 				<MultiWordComposition
-					wordTimings={WORD_TIMINGS}
+					wordTimings={visibleWords}
 					audioFile="yehuda-video/final_audio.mp3"
 					gapThreshold={0.4}
 					maxWordsPerGroup={7}
@@ -290,18 +333,25 @@ export const YehudaVideoIntercuts: React.FC = () => {
 				/>
 			</Sequence>
 
-			{/* Layer 2+: Image Scenes (cover text completely during their windows) */}
-			{/* Duration extended by FADEOUT_FRAMES so fadeout happens AFTER text block ends */}
-			{IMAGE_SCENES.map((scene, index) => (
-				<Sequence
-					key={index}
-					name={`Image: ${scene.name}`}
-					from={Math.round(scene.startTime * fps)}
-					durationInFrames={Math.round((scene.endTime - scene.startTime) * fps) + FADEOUT_FRAMES}
-				>
-					<ImageSceneComponent scene={scene} />
-				</Sequence>
-			))}
+			{/* Layer 2+: Image Scenes */}
+			{/* Consecutive images: hard cut (no extra frames) */}
+			{/* Non-consecutive: fadeout AFTER text block ends */}
+			{IMAGE_SCENES.map((scene, index) => {
+				const isConsecutive = isNextImageConsecutive(index, IMAGE_SCENES);
+				// Only add fadeout frames if NOT followed by consecutive image
+				const extraFrames = isConsecutive ? 0 : FADEOUT_FRAMES;
+
+				return (
+					<Sequence
+						key={index}
+						name={`Image: ${scene.name}`}
+						from={Math.round(scene.startTime * fps)}
+						durationInFrames={Math.round((scene.endTime - scene.startTime) * fps) + extraFrames}
+					>
+						<ImageSceneComponent scene={scene} isConsecutive={isConsecutive} />
+					</Sequence>
+				);
+			})}
 		</AbsoluteFill>
 	);
 };
