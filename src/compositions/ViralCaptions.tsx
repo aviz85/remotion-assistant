@@ -1,6 +1,7 @@
 import {
 	AbsoluteFill,
 	OffthreadVideo,
+	Audio,
 	useCurrentFrame,
 	useVideoConfig,
 	interpolate,
@@ -32,6 +33,8 @@ const { fontFamily } = loadFont('normal', {
 export interface ViralCaptionsProps {
 	videoFileName: string; // relative to public/viral-captions/{jobId}/
 	scriptFileName: string; // relative to public/viral-captions/{jobId}/
+	musicFileName?: string; // optional background music mp3
+	musicVolume?: number; // 0-1, default 0.15
 	jobId: string;
 }
 
@@ -230,6 +233,8 @@ const CaptionPageComponent: React.FC<CaptionPageComponentProps> = ({
 export const ViralCaptions: React.FC<ViralCaptionsProps> = ({
 	videoFileName,
 	scriptFileName,
+	musicFileName,
+	musicVolume = 0.15,
 	jobId,
 }) => {
 	const frame = useCurrentFrame();
@@ -240,6 +245,9 @@ export const ViralCaptions: React.FC<ViralCaptionsProps> = ({
 
 	const videoSrc = staticFile(`viral-captions/${jobId}/${videoFileName}`);
 	const scriptSrc = staticFile(`viral-captions/${jobId}/${scriptFileName}`);
+	const musicSrc = musicFileName
+		? staticFile(`viral-captions/${jobId}/${musicFileName}`)
+		: null;
 
 	const loadScript = useCallback(async () => {
 		try {
@@ -303,6 +311,11 @@ export const ViralCaptions: React.FC<ViralCaptionsProps> = ({
 					pointerEvents: 'none',
 				}}
 			/>
+
+			{/* Background music */}
+			{musicSrc && (
+				<Audio src={musicSrc} volume={musicVolume} startFrom={0} />
+			)}
 
 			{/* Caption pages as Sequences */}
 			{pages.map((page) => {
