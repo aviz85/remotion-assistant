@@ -35,6 +35,11 @@ import { AGISubtitles } from "./compositions/AGISubtitles";
 import { SurpriseNonsense } from "./compositions/SurpriseNonsense";
 import { ParashaBoVideo } from "./compositions/ParashaBoVideo";
 import { AgentPromoVideo } from "./compositions/AgentPromoVideo";
+import { MikdashShabbatVideo } from "./compositions/MikdashShabbatVideo";
+import { CosmicVortex, cosmicVortexSchema } from "./compositions/CosmicVortex";
+import { MoltbookVideo } from "./compositions/MoltbookVideo";
+import { SamariaMap, samariaMapSchema } from "./compositions/SamariaMap";
+import { ViralCaptions } from "./compositions/ViralCaptions";
 
 // Schema for FocusTemplateDemo (single word) with slider controls
 const focusTemplateDemoSchema = z.object({
@@ -624,6 +629,14 @@ export const RemotionRoot: React.FC = () => {
           width={1080}
           height={1920}
         />
+        <Composition
+          id="MikdashShabbatVideo"
+          component={MikdashShabbatVideo}
+          durationInFrames={10800}
+          fps={30}
+          width={1920}
+          height={1080}
+        />
       </Folder>
 
       {/* Promo Videos */}
@@ -710,6 +723,96 @@ export const RemotionRoot: React.FC = () => {
           defaultProps={{
             showMusic: true,
             musicVolume: 0.15,
+          }}
+        />
+        <Composition
+          id="MoltbookVideo"
+          component={MoltbookVideo}
+          durationInFrames={2630}
+          fps={30}
+          width={1920}
+          height={1080}
+        />
+      </Folder>
+
+      {/* Wild / Experimental */}
+      <Folder name="Wild">
+        <Composition
+          id="CosmicVortex"
+          component={CosmicVortex}
+          durationInFrames={660}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={cosmicVortexSchema}
+          defaultProps={{
+            transitionSpeed: 1,
+            titleSize: 90,
+            subtitleSize: 32,
+            glowIntensity: 1,
+            particleDensity: 1,
+            warmth: 0.5,
+            showParticles: true,
+            showVignette: true,
+            musicEnabled: true,
+            musicVolume: 0.7,
+            sfxEnabled: true,
+            sfxVolume: 0.5,
+          }}
+        />
+      </Folder>
+
+      {/* Map Animations */}
+      <Folder name="Maps">
+        <Composition
+          id="SamariaMap"
+          component={SamariaMap}
+          durationInFrames={180}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={samariaMapSchema}
+          defaultProps={{
+            pinSize: 40,
+            pinDelay: 10,
+            ringSize: 60,
+            pulseSize: 14,
+            counterSize: 32,
+            showCounter: true,
+          }}
+        />
+      </Folder>
+
+      {/* Captions */}
+      <Folder name="Captions">
+        <Composition
+          id="ViralCaptions"
+          component={ViralCaptions}
+          durationInFrames={900}
+          fps={30}
+          width={1080}
+          height={1920}
+          defaultProps={{
+            videoFileName: 'video.mp4',
+            scriptFileName: 'caption_script.json',
+            jobId: 'sample',
+          }}
+          calculateMetadata={async ({ props }) => {
+            // Dynamic duration/dimensions from input props
+            const inputProps = props as Record<string, unknown>;
+            const durationMs = inputProps.durationMs as number | undefined;
+            const w = inputProps.width as number | undefined;
+            const h = inputProps.height as number | undefined;
+            const inputFps = inputProps.fps as number | undefined;
+            const fps = inputFps || 30;
+            return {
+              fps,
+              width: w || 1080,
+              height: h || 1920,
+              durationInFrames: durationMs
+                ? Math.ceil((durationMs / 1000) * fps)
+                : 900,
+            };
           }}
         />
       </Folder>
