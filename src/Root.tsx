@@ -40,6 +40,7 @@ import { CosmicVortex, cosmicVortexSchema } from "./compositions/CosmicVortex";
 import { MoltbookVideo } from "./compositions/MoltbookVideo";
 import { SamariaMap, samariaMapSchema } from "./compositions/SamariaMap";
 import { ViralCaptions } from "./compositions/ViralCaptions";
+import { W1, W2, W3, W4, W5, W6, W7, W8, W9, W10 } from "./compositions/CaptionStyleTest";
 
 // Schema for FocusTemplateDemo (single word) with slider controls
 const focusTemplateDemoSchema = z.object({
@@ -781,6 +782,20 @@ export const RemotionRoot: React.FC = () => {
             showCounter: true,
           }}
         />
+      </Folder>
+
+      {/* Caption Style Tests */}
+      <Folder name="CaptionTests">
+        <Composition id="W1-Heebo-1w-random-pos" component={W1} durationInFrames={480} fps={30} width={1080} height={1920} />
+        <Composition id="W2-Heebo-2w-tilt-rainbow" component={W2} durationInFrames={480} fps={30} width={1080} height={1920} />
+        <Composition id="W3-Karantina-1w-extreme" component={W3} durationInFrames={480} fps={30} width={1080} height={1920} />
+        <Composition id="W4-Heebo-1w-slide-dir" component={W4} durationInFrames={480} fps={30} width={1080} height={1920} />
+        <Composition id="W5-Heebo-3w-rotated" component={W5} durationInFrames={480} fps={30} width={1080} height={1920} />
+        <Composition id="W6-Karantina-2w-opposite" component={W6} durationInFrames={480} fps={30} width={1080} height={1920} />
+        <Composition id="W7-Heebo-1w-drop-rainbow" component={W7} durationInFrames={480} fps={30} width={1080} height={1920} />
+        <Composition id="W8-Heebo-2w-scattered" component={W8} durationInFrames={480} fps={30} width={1080} height={1920} />
+        <Composition id="W9-Mixed-1w-glitch" component={W9} durationInFrames={480} fps={30} width={1080} height={1920} />
+        <Composition id="W10-Heebo-1w-zoom-spiral" component={W10} durationInFrames={480} fps={30} width={1080} height={1920} />
       </Folder>
 
       {/* Captions */}

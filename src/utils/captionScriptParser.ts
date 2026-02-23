@@ -48,17 +48,17 @@ export interface CaptionScript {
 const DEFAULT_META: CaptionMeta = {
 	language: 'he',
 	rtl: true,
-	font: 'Inter',
-	fontWeight: 800,
-	fontSize: 68,
+	font: 'Anton',
+	fontWeight: 400,
+	fontSize: 90,
 	position: 'center',
 	primaryColor: '#FFFFFF',
 	highlightColor: '#FFD700',
 	strokeColor: '#000000',
-	strokeWidth: 3,
-	backgroundColor: 'rgba(0,0,0,0.3)',
-	backgroundPadding: 12,
-	backgroundRadius: 8,
+	strokeWidth: 4,
+	backgroundColor: 'transparent',
+	backgroundPadding: 0,
+	backgroundRadius: 0,
 };
 
 // --- Validation ---
