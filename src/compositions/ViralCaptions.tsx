@@ -88,15 +88,17 @@ export const ViralCaptions: React.FC<ViralCaptionsProps> = ({
 	// Flatten all tokens with their page info
 	interface FlatToken extends CaptionToken {
 		pageEmoji: string | null;
+		isLastInPage: boolean;
 		globalIdx: number;
 	}
 
 	const allTokens: FlatToken[] = [];
 	pages.forEach((page: CaptionPage) => {
-		page.tokens.forEach((token: CaptionToken) => {
+		page.tokens.forEach((token: CaptionToken, tokenIdx: number) => {
 			allTokens.push({
 				...token,
 				pageEmoji: page.emoji,
+				isLastInPage: tokenIdx === page.tokens.length - 1,
 				globalIdx: allTokens.length,
 			});
 		});
@@ -153,7 +155,7 @@ export const ViralCaptions: React.FC<ViralCaptionsProps> = ({
 							textAlign: 'center',
 							direction: meta.rtl ? 'rtl' : 'ltr',
 						}}>
-							{activeToken.pageEmoji && (
+							{activeToken.pageEmoji && activeToken.isLastInPage && (
 								<div style={{
 									fontSize: fontSize * 1.0,
 									transform: `scale(${Math.min(pop * 1.2, 1)})`,
